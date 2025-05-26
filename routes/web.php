@@ -2,11 +2,15 @@
 
 use Illuminate\Support\Facades\Route;
 
+
 Route::get('/', function () {
-    return view('welcome');
+    return view('home');
 });
 
+Route::get('home', function () {
+    return view('user/home');
+});
 
-Route::get('navbar', function () {
-    return view('component/navbar');
+Route::get('unggah-data', function () {
+    return view('user/unggahdata');
 });
