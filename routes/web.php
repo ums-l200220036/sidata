@@ -9,8 +9,8 @@ Route::get('/', function () {
 
 Route::get('home', function () {
     return view('user/home');
-});
+})->name('beranda');
 
 Route::get('unggah-data', function () {
     return view('user/unggahdata');
-});
+})->name('unggah');
