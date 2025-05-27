@@ -11,25 +11,30 @@
                 <label for="kategori" class="block mb-2 font-semibold text-gray-700">
                     Kategori: <span class="text-red-500">*</span>
                 </label>
-                <select id="kategori" name="kategori"
-                    class="w-full p-3 pl-4 pr-10 border border-gray-300 rounded-md mb-6
-                        focus:outline-none focus:ring-2 focus:ring-red-500
-                        text-gray-700 font-semibold
-                        bg-[right_0.75rem_center] bg-no-repeat bg-[length:1.25em_1.25em]
-                        bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiAjdjYzNzQ3YiIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxwYXRoIGQ9Ik02IDlsNiA2IDYtNiIvPjwvc3ZnPg==')]"
-                    required>
-                    <option value="" disabled selected>Pilih Kategori</option>
-                    <option value="kesehatan">Kesehatan</option>
-                    <option value="pendidikan">Pendidikan</option>
-                    <option value="infrastruktur">Infrastruktur</option>
-                </select>
+                <div class="relative w-full mb-6">
+                    <select id="kategori" name="kategori"
+                        class="w-full appearance-none px-4 py-3 border border-[#FE482B] rounded-xl shadow-sm text-gray-700 font-medium bg-white focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all duration-200">
+                        <option value="" disabled selected hidden>Pilih Kategori</option>
+                        <option value="kesehatan">Kesehatan</option>
+                        <option value="pendidikan">Pendidikan</option>
+                        <option value="infrastruktur">Infrastruktur</option>
+                    </select>
+                    <!-- Custom Dropdown Icon -->
+                    <div class="pointer-events-none absolute inset-y-0 right-4 flex items-center text-gray-500">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </div>
+                </div>
+                
 
                 <p class="text-sm text-gray-600 mb-4">
                     Sebelum mengunggah data, harap pilih kategori terlebih dahulu, lalu unduh template Excel berikut sebagai panduan pengisian data sektoral atau statistik OPD Kota Surakarta:
                 </p>
 
                 <a href="#"
-                   class="inline-flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-600 text-white rounded-lg shadow-lg font-semibold mb-6 transition duration-300"
+                   class="inline-flex items-center gap-3 px-6 py-3 bg-gradient-to-r bg-[#FE482B] text-white hover:bg-white hover:border hover:border-[#FE482B] hover:text-[#FE482B] rounded-lg shadow-lg font-semibold mb-6 transition duration-300"
                 >
                     <i class="fas fa-download"></i> Unduh Template Excel
                 </a>
@@ -59,7 +64,7 @@
                     <p x-show="fileName" x-text="'File dipilih: ' + fileName" class="mt-3 text-sm text-gray-700 font-medium"></p>
                 </div>
 
-                <button class="w-full bg-red-600 text-white py-3 rounded hover:bg-red-700 transition duration-200">
+                <button class="w-full py-3 rounded bg-[#FE482B] text-white hover:bg-white hover:border hover:border-[#FE482B] hover:text-[#FE482B] cursor-pointer transition duration-200">
                     <i class="fas fa-paper-plane mr-2"></i> Kirim
                 </button>
             </div>
