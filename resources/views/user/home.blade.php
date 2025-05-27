@@ -71,15 +71,6 @@
             Data Jumlah Kasus
         </label>
     </form>
-
-    <div class="mt-10">
-        <a
-            href="#"
-            class="inline-flex items-center justify-center gap-3 px-8 py-4 bg-gradient-to-r from-[#FE482B] to-[#E63E28] text-white rounded-lg shadow-lg hover:from-[#E63E28] hover:to-[#FE482B] transition duration-300 font-semibold text-lg"
-        >
-            <i class="fas fa-download"></i> Unduh Template Excel
-        </a>
-    </div>
 </section>
 
 </x-usernav>
