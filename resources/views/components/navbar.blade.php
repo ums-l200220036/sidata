@@ -24,7 +24,7 @@
         </ul>
       
         <!-- Tombol Login -->
-        <a href="#" class="bg-[#FE482B] hover:bg-[#FE482B] text-white font-semibold px-5 py-1 rounded-xl">
+        <a href="/login" class="bg-[#FE482B] hover:bg-[#FE482B] text-white font-semibold px-5 py-1 rounded-xl">
           Login
         </a>
       </nav>
