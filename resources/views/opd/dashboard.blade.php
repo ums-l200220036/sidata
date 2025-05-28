@@ -1,7 +1,7 @@
 <x-navbar>
     <div class="relative text-center py-16 bg-white">
         <div class="max-w-4xl mx-auto">
-            <p class="text-[#FE482B] text-base font-medium">Dinas Kesehatan</p>
+            <p class="text-[#FE482B] text-base font-medium">{{ Auth::user()->name }}</p>
             <h1 class="text-4xl font-bold mt-1">Sugeng Rawuh</h1>
             <div class="flex justify-center items-center mt-2 gap-4">
                 <p class="text-black text-base leading-relaxed"><i class="fa-solid fa-calendar-days mr-1"></i> Jum'at 16 Mei 2025</p>

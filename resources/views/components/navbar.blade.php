@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    {{-- font awesome --}}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    {{-- Alpine JS --}}
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
     @vite('resources/css/app.css')
 </head>
 <body>
@@ -48,14 +54,36 @@
 
         @auth
           {{-- Tampilkan nama pengguna dan tombol Logout jika sudah login --}}
-          <div class="flex items-center space-x-4">
+          <div class="flex items-center space-x-2 relative" x-data="{ open: false }">
             <span class="text-gray-800 font-medium">Halo, {{ Auth::user()->name }}</span>
-            <form method="POST" action="{{ route('logout') }}">
-              @csrf
-              <button type="submit" class="bg-gray-800 hover:bg-gray-700 text-white font-semibold px-5 py-1 rounded-xl transition">
-                Logout
+            <div class="relative">
+              <button @click="open = !open" @click.outside="open = false" class="focus:outline-none">
+                  <i class="fas fa-user-circle text-xl text-[#FE482B] cursor-pointer"></i>
               </button>
-            </form>
+              <div x-show="open"
+                  x-transition:enter="transition ease-out duration-100"
+                  x-transition:enter-start="transform opacity-0 scale-95"
+                  x-transition:enter-end="transform opacity-100 scale-100"
+                  x-transition:leave="transition ease-in duration-75"
+                  x-transition:leave-start="transform opacity-100 scale-100"
+                  x-transition:leave-end="transform opacity-0 scale-95"
+                  class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50"
+                  style="top: 100%;">
+                  <a href="#" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                      <i class="fas fa-question-circle mr-2 text-[#FE482B]"></i> Bantuan
+                  </a>
+                  <form  method="POST" action="{{ route('logout') }}" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                      @csrf
+                      <button type="submit" class="">
+                        <i class="fas fa-sign-out-alt mr-2 text-[#FE482B]"></i> Logout
+                      </button>
+                  </form>
+              </div>
+
+
+
+
+            
           </div>
         @endauth
     </nav>

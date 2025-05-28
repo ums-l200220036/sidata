@@ -1,12 +1,11 @@
 <x-navbar>
     <div class="relative text-center py-16 bg-white">
         <div class="max-w-4xl mx-auto">
-            <p class="text-[#FE482B] text-base font-medium">Dinas Kesehatan</p>
-            <h1 class="text-4xl font-bold mt-1">Sugeng Rawuh</h1>
-            <div class="flex justify-center items-center mt-2 gap-4">
-                <p class="text-black text-base leading-relaxed"><i class="fa-solid fa-calendar-days mr-1"></i> Jum'at 16 Mei 2025</p>
-                <p class="text-black text-base leading-relaxed"><i class="fa-solid fa-clock mr-2"></i> 23:36:25 WIB</p>
-            </div>
+            <p class="text-[#FE482B] text-base font-medium">{{ Auth::user()->name }}</p>
+            <h1 class="text-4xl font-bold">Sugeng Rawuh</h1>
+            <div class="font-medium flex items-center justify-center gap-2 text-black mt-2"
+                x-data="waktuIndonesia()" x-init="init()" x-html="tanggalWaktu">
+            </div>   
         </div>
 
         <img src="{{ asset('images/jumbotronimage.png') }}"
@@ -72,5 +71,40 @@
         </label>
     </form>
 </section>
+
+<script>
+    function waktuIndonesia() {
+      return {
+        tanggalWaktu: '',
+        init() {
+          this.update();
+          setInterval(() => this.update(), 1000);
+        },
+        update() {
+          const tanggalOptions = {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+          };
+          const jamOptions = {
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: false
+          };
+          const now = new Date();
+          const tanggal = new Intl.DateTimeFormat('id-ID', tanggalOptions).format(now);
+          const jam = new Intl.DateTimeFormat('id-ID', jamOptions).format(now);
+  
+          this.tanggalWaktu = `
+            <i class="fa-solid fa-calendar-days mr-0.5"></i> ${tanggal}
+            &nbsp; <i class="fa-solid fa-clock mr-0.5"></i> ${jam}
+          `;
+        }
+      }
+    }
+  </script>
+  
 
 </x-navbar>
