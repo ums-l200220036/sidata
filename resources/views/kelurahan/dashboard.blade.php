@@ -4,7 +4,7 @@
             <p class="text-[#FE482B] text-base font-medium">{{ Auth::user()->name }}</p>
             <h1 class="text-4xl font-bold">Sugeng Rawuh</h1>
             <div class="font-medium flex items-center justify-center gap-2 text-black mt-2"
-                x-data="waktuIndonesia()" x-init="init()" x-html="tanggalWaktu">
+                x-data="waktuIndonesia()" x-init="init()" x-html="tanggalWaktu"> 
             </div>   
         </div>
 
@@ -99,7 +99,7 @@
   
           this.tanggalWaktu = `
             <i class="fa-solid fa-calendar-days mr-0.5"></i> ${tanggal}
-            &nbsp; <i class="fa-solid fa-clock mr-0.5"></i> ${jam}
+            &nbsp; <i class="fa-solid fa-clock mr-0.5"></i> ${jam} <h1 class="-ml-1">WIB</h1>
           `;
         }
       }
