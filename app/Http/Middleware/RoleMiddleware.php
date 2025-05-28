@@ -21,15 +21,8 @@ class RoleMiddleware
         }
 
         if (Auth::user()->role !== $role) {
-            // Redirect fallback ke dashboard sesuai peran
-            $redirect =  match (Auth::user()->role) {
-                'admin' => '/admin/dashboard',
-                'opd' => '/opd/dashboard',
-                'kelurahan' => '/kelurahan/dashboard',
-                default => '/'
-            };
-
-            return redirect($redirect)->with('error', 'Anda tidak memiliki akses ke halaman tersebut.');
+            // Langsung abort tanpa redirect ke dashboard lain
+            abort(403, 'Anda tidak memiliki akses ke halaman ini.');
         }
 
         return $next($request);

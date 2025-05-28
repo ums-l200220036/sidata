@@ -27,7 +27,7 @@
 
                     <!-- Email -->
                     <div class="mb-4">
-                        <label for="email" class="block text-white text-sm mb-1">Nama Pengguna</label>
+                        <label for="email" class="block text-white text-sm mb-1">Email</label>
                         <input id="email" type="email" name="email" :value="old('email')" required autofocus
                                class="w-full px-4 py-2 rounded bg-white text-gray-800 focus:outline-none"
                                placeholder="Masukkan Nama Pengguna">

@@ -13,89 +13,96 @@
     @vite('resources/css/app.css')
 </head>
 <body>
-      <nav class="bg-white px-24 py-4 flex items-center justify-between">
+    <nav class="bg-white px-24 py-4 flex items-center justify-between">
         <div class="text-[#FE482B] font-bold text-2xl">
-          SiData
+            SiData
         </div>
-      
+
         <ul class="flex space-x-6 text-gray-800 font-medium">
-          {{-- Link Beranda selalu tampil untuk semua kondisi --}}
-          <li>
-            <a href="/" class="text-black border-b-2 transition border-[#FE482B]">Beranda</a>
-          </li>
-
-          @guest
-            {{-- Menu untuk pengguna yang belum login --}}
+            {{-- Link Beranda dinamis berdasarkan login & role --}}
             <li>
-              <a href="/tentang" class="text-black transition">Tentang</a>
+                @auth
+                    <a href="{{ route('dashboard') }}" class="text-black border-b-2 transition border-[#FE482B]">
+                        Beranda
+                    </a>
+                @else
+                    <a href="/" class="text-black border-b-2 transition border-[#FE482B]">Beranda</a>
+                @endauth
             </li>
-          @endguest
 
-          @auth
-            {{-- Menu untuk pengguna yang sudah login --}}
-            @if (Auth::user()->role == 'opd')
-              <li>
-                <a href="/unggah-data" class="text-black transition">Unggah Data</a>
-              </li>
-            @elseif (Auth::user()->role == 'kelurahan')
-              <li>
-                <a href="/data-kelurahan" class="text-black transition">Data Kelurahan</a>
-              </li>
-            @endif
-          @endauth
+            @guest
+                {{-- Menu untuk pengguna yang belum login --}}
+                <li>
+                    <a href="/tentang" class="text-black transition">Tentang</a>
+                </li>
+            @endguest
+
+            @auth
+                {{-- Menu khusus berdasarkan role --}}
+                @if (Auth::user()->role == 'opd')
+                    <li>
+                        <a href="/unggah-data" class="text-black transition">Unggah Data</a>
+                    </li>
+                @elseif (Auth::user()->role == 'kelurahan')
+                    <li>
+                        <a href="/data-kelurahan" class="text-black transition">Data Kelurahan</a>
+                    </li>
+                @elseif (Auth::user()->role == 'admin')
+                    <li>
+                        <a href="/data-user" class="text-black transition">Manajemen User</a>
+                    </li>
+                    <li>
+                        <a href="/data-kategori" class="text-black transition">Kategori</a>
+                    </li>
+                @endif
+            @endauth
         </ul>
-      
+
         @guest
-          {{-- Tampilkan tombol Login jika belum login --}}
-          <a href="/login" class="bg-[#FE482B] hover:bg-orange-600 text-white font-semibold px-5 py-1 rounded-xl transition">
-            Login
-          </a>
+            <a href="/login" class="bg-[#FE482B] hover:bg-orange-600 text-white font-semibold px-5 py-1 rounded-xl transition">
+                Login
+            </a>
         @endguest
 
         @auth
-          {{-- Tampilkan nama pengguna dan tombol Logout jika sudah login --}}
-          <div class="flex items-center space-x-2 relative" x-data="{ open: false }">
-            <span class="text-gray-800 font-medium">Halo, {{ Auth::user()->name }}</span>
-            <div class="relative">
-              <button @click="open = !open" @click.outside="open = false" class="focus:outline-none">
-                  <i class="fas fa-user-circle text-xl text-[#FE482B] cursor-pointer"></i>
-              </button>
-              <div x-show="open"
-                  x-transition:enter="transition ease-out duration-100"
-                  x-transition:enter-start="transform opacity-0 scale-95"
-                  x-transition:enter-end="transform opacity-100 scale-100"
-                  x-transition:leave="transition ease-in duration-75"
-                  x-transition:leave-start="transform opacity-100 scale-100"
-                  x-transition:leave-end="transform opacity-0 scale-95"
-                  class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50"
-                  style="top: 100%;">
-                  <a href="#" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                      <i class="fas fa-question-circle mr-2 text-[#FE482B]"></i> Bantuan
-                  </a>
-                  <form  method="POST" action="{{ route('logout') }}" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                      @csrf
-                      <button type="submit" class="">
-                        <i class="fas fa-sign-out-alt mr-2 text-[#FE482B]"></i> Logout
-                      </button>
-                  </form>
-              </div>
-
-
-
-
-            
-          </div>
+            <div class="flex items-center space-x-2 relative" x-data="{ open: false }">
+                <span class="text-gray-800 font-medium">Halo, {{ Auth::user()->name }}</span>
+                <div class="relative">
+                    <button @click="open = !open" @click.outside="open = false" class="focus:outline-none">
+                        <i class="fas fa-user-circle text-xl text-[#FE482B] cursor-pointer"></i>
+                    </button>
+                    <div x-show="open"
+                        x-transition:enter="transition ease-out duration-100"
+                        x-transition:enter-start="transform opacity-0 scale-95"
+                        x-transition:enter-end="transform opacity-100 scale-100"
+                        x-transition:leave="transition ease-in duration-75"
+                        x-transition:leave-start="transform opacity-100 scale-100"
+                        x-transition:leave-end="transform opacity-0 scale-95"
+                        class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50"
+                        style="top: 100%;">
+                        <a href="#" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                            <i class="fas fa-question-circle mr-2 text-[#FE482B]"></i> Bantuan
+                        </a>
+                        <form method="POST" action="{{ route('logout') }}" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                            @csrf
+                            <button type="submit" class="">
+                                <i class="fas fa-sign-out-alt mr-2 text-[#FE482B]"></i> Logout
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
         @endauth
     </nav>
 
-      {{ $slot }}
-      
+    {{-- Isi konten --}}
+    {{ $slot }}
 
-      <footer class="bg-black text-white py-4 mt-7 px-24">
+    <footer class="bg-black text-white py-4 mt-7 px-24">
         <div class="flex flex-col md:flex-row items-center md:justify-between text-center w-full">
             <h1 class="text-lg font-bold">SiData</h1>
             <p class="text-sm mt-2 md:mt-0 w-full md:w-auto">© 2025 SiData. All rights reserved.</p>
         </div>
-      </footer>
+    </footer>
 </body>
 </html>
