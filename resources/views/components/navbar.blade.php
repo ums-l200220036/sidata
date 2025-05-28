@@ -41,7 +41,7 @@
                 {{-- Menu khusus berdasarkan role --}}
                 @if (Auth::user()->role == 'opd')
                     <li>
-                        <a href="/unggah-data" class="text-black transition">Unggah Data</a>
+                        <a href="{{ route('opd.unggah') }}" class="text-black transition">Unggah Data</a>
                     </li>
                 @elseif (Auth::user()->role == 'kelurahan')
                     <li>

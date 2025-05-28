@@ -8,7 +8,12 @@ Route::get('/', function () {
     return view('home');
 });
 
+Route::get('/unggah-data', function () {
+    return view('user.unggahdata');
+})->name('opd.unggah');
+
 Route::get('/redirect', [UserController::class, 'redirectAfterLogin'])->name('user.redirect');
+
 
 // Redirect dashboard berdasarkan role user setelah login
 Route::middleware(['auth', 'verified'])->group(function () {

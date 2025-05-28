@@ -1,4 +1,4 @@
-<x-usernav>
+<x-navbar>
     <div class="min-h-screen grid grid-cols-1 md:grid-cols-3 bg-cover bg-no-repeat bg-right" style="background-image: url('{{ asset('images/jumbotronimage.png') }}')">
         <!-- Form Section -->
         <div class="pl-24 bg-white shadow-2xl shadow-gray-400/50">
@@ -75,4 +75,4 @@
             <!-- Kosong karena background sudah ada -->
         </div>
     </div>
-</x-usernav>
+</x-navbar>
