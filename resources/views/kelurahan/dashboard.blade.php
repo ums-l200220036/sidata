@@ -1,4 +1,4 @@
-<x-usernav>
+<x-navbar>
     <div class="relative text-center py-16 bg-white">
         <div class="max-w-4xl mx-auto">
             <p class="text-[#FE482B] text-base font-medium">Dinas Kesehatan</p>
@@ -73,4 +73,4 @@
     </form>
 </section>
 
-</x-usernav>
+</x-navbar>
