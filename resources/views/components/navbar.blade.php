@@ -22,18 +22,25 @@
             {{-- Link Beranda dinamis berdasarkan login & role --}}
             <li>
                 @auth
-                    <a href="{{ route('dashboard') }}" class="text-black border-b-2 transition border-[#FE482B]">
+                    <a href="{{ route('dashboard') }}"
+                       class="{{ request()->routeIs('dashboard') ? 'text-black pb-1 border-b-2 border-[#FE482B]' : 'text-black' }} transition">
                         Beranda
                     </a>
                 @else
-                    <a href="/" class="text-black border-b-2 transition border-[#FE482B]">Beranda</a>
+                    <a href="{{ url('/') }}"
+                       class="{{ request()->is('/') ? 'text-black pb-1 border-b-2 border-[#FE482B]' : 'text-black' }} transition">
+                        Beranda
+                    </a>
                 @endauth
             </li>
 
             @guest
                 {{-- Menu untuk pengguna yang belum login --}}
                 <li>
-                    <a href="/tentang" class="text-black transition">Tentang</a>
+                    <a href="/tentang"
+                       class="{{ request()->is('tentang') ? 'text-black pb-1 border-b-2 border-[#FE482B]' : 'text-black' }} transition">
+                        Tentang
+                    </a>
                 </li>
             @endguest
 
@@ -41,18 +48,30 @@
                 {{-- Menu khusus berdasarkan role --}}
                 @if (Auth::user()->role == 'opd')
                     <li>
-                        <a href="{{ route('opd.unggah') }}" class="text-black transition">Unggah Data</a>
+                        <a href="{{ route('opd.unggah') }}"
+                           class="{{ request()->routeIs('opd.unggah') ? 'text-black pb-1 border-b-2 border-[#FE482B]' : 'text-black' }} transition">
+                            Unggah Data
+                        </a>
                     </li>
                 @elseif (Auth::user()->role == 'kelurahan')
                     <li>
-                        <a href="/data-kelurahan" class="text-black transition">Data Kelurahan</a>
+                        <a href="/data-kelurahan"
+                           class="{{ request()->is('data-kelurahan') ? 'text-black pb-1 border-b-2 border-[#FE482B]' : 'text-black' }} transition">
+                            Data Kelurahan
+                        </a>
                     </li>
                 @elseif (Auth::user()->role == 'admin')
                     <li>
-                        <a href="/data-user" class="text-black transition">Manajemen User</a>
+                        <a href="/data-user"
+                           class="{{ request()->is('data-user') ? 'text-black pb-1 border-b-2 border-[#FE482B]' : 'text-black' }} transition">
+                            Manajemen User
+                        </a>
                     </li>
                     <li>
-                        <a href="/data-kategori" class="text-black transition">Kategori</a>
+                        <a href="/data-kategori"
+                           class="{{ request()->is('data-kategori') ? 'text-black pb-1 border-b-2 border-[#FE482B]' : 'text-black' }} transition">
+                            Kategori
+                        </a>
                     </li>
                 @endif
             @endauth
@@ -93,7 +112,7 @@
                 </div>
             </div>
         @endauth
-    </nav>
+    </nav>    
 
     {{-- Isi konten --}}
     {{ $slot }}
