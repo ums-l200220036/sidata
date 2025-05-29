@@ -18,6 +18,10 @@ Route::get('/redirect', [UserController::class, 'redirectAfterLogin'])->name('us
 // Redirect dashboard berdasarkan role user setelah login
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    Route::get('/admin/dashboard', function () {
+        return view('admin.dashboard');
+    })->name('admin.dashboard');
 });
 
 require __DIR__.'/auth.php';

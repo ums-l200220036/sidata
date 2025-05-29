@@ -117,7 +117,7 @@
     {{-- Isi konten --}}
     {{ $slot }}
 
-    <footer class="bg-black text-white py-4 mt-7 px-24">
+    <footer class="bg-black text-white py-4 px-24">
         <div class="flex flex-col md:flex-row items-center md:justify-between text-center w-full">
             <h1 class="text-lg font-bold">SiData</h1>
             <p class="text-sm mt-2 md:mt-0 w-full md:w-auto">© 2025 SiData. All rights reserved.</p>

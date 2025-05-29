@@ -19,16 +19,7 @@
                         <option value="pendidikan">Pendidikan</option>
                         <option value="infrastruktur">Infrastruktur</option>
                     </select>
-                    <!-- Custom Dropdown Icon -->
-                    <div class="pointer-events-none absolute inset-y-0 right-4 flex items-center text-gray-500">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2"
-                            viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
-                        </svg>
-                    </div>
                 </div>
-                
-
                 <p class="text-sm text-gray-600 mb-4">
                     Sebelum mengunggah data, harap pilih kategori terlebih dahulu, lalu unduh template Excel berikut sebagai panduan pengisian data sektoral atau statistik OPD Kota Surakarta:
                 </p>
