@@ -1,5 +1,5 @@
 <x-navbar>
-    <div class="min-h-screen grid grid-cols-1 md:grid-cols-3 bg-cover bg-no-repeat bg-right" style="background-image: url('{{ asset('images/jumbotronimage.png') }}')">
+    <div class="min-h-screen grid grid-cols-1 md:grid-cols-3 bg-cover bg-no-repeat bg-right">
         <!-- Form Section -->
         <div class="pl-24 bg-white shadow-2xl shadow-gray-400/50">
             <div class="md:col-span-1 flex flex-col justify-center bg-white bg-opacity-90 p-10 pl-0">
@@ -25,7 +25,7 @@
                 </p>
 
                 <a href="#"
-                   class="inline-flex items-center gap-3 px-6 py-3 bg-gradient-to-r bg-[#FE482B] text-white hover:bg-white hover:border hover:border-[#FE482B] hover:text-[#FE482B] rounded-lg shadow-lg font-semibold mb-6 transition duration-300"
+                   class="inline-flex items-center gap-3 px-6 py-3 bg-gradient-to-r bg-[#FE482B] text-white hover:outline-1 hover:outline hover:bg-white  hover:text-[#FE482B] rounded-lg shadow-lg font-semibold mb-6 transition duration-300"
                 >
                     <i class="fas fa-download"></i> Unduh Template Excel
                 </a>
@@ -55,7 +55,7 @@
                     <p x-show="fileName" x-text="'File dipilih: ' + fileName" class="mt-3 text-sm text-gray-700 font-medium"></p>
                 </div>
 
-                <button class="w-full py-3 rounded bg-[#FE482B] text-white hover:bg-white hover:border hover:border-[#FE482B] hover:text-[#FE482B] cursor-pointer transition duration-200">
+                <button class="w-full py-3 rounded bg-[#FE482B] text-white hover:bg-white hover:outline-1 hover:outline hover:text-[#FE482B] cursor-pointer transition duration-200">
                     <i class="fas fa-paper-plane mr-2"></i> Kirim
                 </button>
             </div>
@@ -63,7 +63,16 @@
 
         <!-- Right Illustration -->
         <div class="hidden md:flex md:col-span-2 items-end justify-center">
-            <!-- Kosong karena background sudah ada -->
+            <div class="w-full h-screen relative">
+                <div class="absolute top-0 left-0 w-full h-full flex flex-col justify-end items-center text-center">
+                    <h1 class="text-5xl font-bold mb-36 z-10 bg-white bg-opacity-80 px-4 py-2 rounded text-left">
+                        Selamat Datang Di <br> <span class="text-[#FE482B]">SiData</span> Surakarta
+                    </h1>
+                    <img src="{{ asset('images/jumbotronimage.png') }}"
+                         alt="Ilustrasi Surakarta"
+                         class="w-full max-h-[80vh] object-cover" />
+                </div>
+            </div>
         </div>
     </div>
 </x-navbar>
