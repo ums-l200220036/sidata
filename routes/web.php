@@ -25,6 +25,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
 require __DIR__.'/auth.php';
 
 
-Route::get('/admin/Tambah-Pengguna', function () {
-    return view('admin.adduser');
-})->name('admin.adduser');
+Route::get('/kelolapengguna', function () {
+    return view('admin.kelolapengguna');
+})->name('akelolapengguna');
