@@ -19,9 +19,12 @@ Route::get('/redirect', [UserController::class, 'redirectAfterLogin'])->name('us
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    Route::get('/admin/dashboard', function () {
-        return view('admin.dashboard');
-    })->name('admin.dashboard');
+    
 });
 
 require __DIR__.'/auth.php';
+
+
+Route::get('/admin/Tambah-Pengguna', function () {
+    return view('admin.adduser');
+})->name('admin.adduser');
