@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-
+    <title>{{ config('app.name', 'Laravel') }}</title>
     {{-- font awesome --}}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     {{-- Alpine JS --}}
@@ -48,8 +48,8 @@
                 {{-- Menu khusus berdasarkan role --}}
                 @if (Auth::user()->role == 'opd')
                     <li>
-                        <a href="{{ route('opd.unggah') }}"
-                           class="{{ request()->routeIs('opd.unggah') ? 'text-black pb-1 border-b-2 border-[#FE482B]' : 'text-black' }} transition">
+                        <a href="{{ route('data.form') }}"
+                           class="{{ request()->routeIs('data.form') ? 'text-black pb-1 border-b-2 border-[#FE482B]' : 'text-black' }} transition">
                             Unggah Data
                         </a>
                     </li>

@@ -3,14 +3,12 @@
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\DataSektoralImportController;
 
 Route::get('/', function () {
     return view('home');
 });
 
-Route::get('/unggah-data', function () {
-    return view('user.unggahdata');
-})->name('opd.unggah');
 
 Route::get('/redirect', [UserController::class, 'redirectAfterLogin'])->name('user.redirect');
 
@@ -19,9 +17,11 @@ Route::get('/redirect', [UserController::class, 'redirectAfterLogin'])->name('us
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    Route::get('/admin/dashboard', function () {
-        return view('admin.dashboard');
-    })->name('admin.dashboard');
+
+    Route::middleware(['auth', 'role:opd'])->group(function () {
+        Route::get('/unggah-data', [DataSektoralImportController::class, 'form'])->name('data.form');
+        Route::post('/unggah-data', [DataSektoralImportController::class, 'import'])->name('data.import');
+    });
 });
 
 require __DIR__.'/auth.php';
