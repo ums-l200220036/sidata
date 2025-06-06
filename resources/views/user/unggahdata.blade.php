@@ -1,3 +1,6 @@
+@extends('layouts.app')
+
+@section('title', 'Unggah Data')
 <x-navbar>
     <form action="" method="POST" enctype="multipart/form-data">
         @csrf

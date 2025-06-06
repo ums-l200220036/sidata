@@ -1,12 +1,16 @@
+@extends('layouts.app')
+
+@section('title', 'Login')
 <x-guest-layout>
     <div class="min-h-screen flex">
         <!-- Left Section -->
         <div class="w-2/3 bg-white flex items-center justify-center relative">
             <div class="w-full h-screen relative">
                 <div class="absolute top-0 left-0 w-full h-full flex flex-col justify-end items-center text-center">
-                    <h1 class="text-5xl font-bold mb-36 z-10 bg-white bg-opacity-80 px-4 py-2 rounded text-left">
-                        Selamat Datang Di <br> <span class="text-[#FE482B]">SiData</span> Surakarta
-                    </h1>
+                    <!-- Logo Ganti Tulisan -->
+                    <div class="mb-36 z-10 bg-white bg-opacity-80 px-4 py-2 rounded">
+                        <img src="{{ asset('images/SidataLogo.png') }}" alt="Logo SiData Surakarta" class="h-24 mx-auto">
+                    </div>
                     <img src="{{ asset('images/jumbotronimage.png') }}"
                          alt="Ilustrasi Surakarta"
                          class="w-full max-h-[80vh] object-cover" />

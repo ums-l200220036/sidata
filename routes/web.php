@@ -37,3 +37,7 @@ require __DIR__.'/auth.php';
 Route::get('/kelolapengguna', function () {
     return view('admin.kelolapengguna');
 })->name('akelolapengguna');
+
+Route::get('/tentang', function () {
+    return view('tentang');
+})->name('tentang');

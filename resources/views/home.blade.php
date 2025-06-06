@@ -1,3 +1,6 @@
+@extends('layouts.app')
+
+@section('title', 'Home')
 <x-navbar>
     <div class="relative text-center py-16 bg-white">
         <div class="max-w-4xl mx-auto">

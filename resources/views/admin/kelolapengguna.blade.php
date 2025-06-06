@@ -1,3 +1,6 @@
+@extends('layouts.app')
+
+@section('title', 'Kelola Pengguna')
 <x-navbar>
     <div class="min-h-screen py-10 px-4 md:px-12">
         <div class="bg-white rounded-xl" x-data="{ showModal: false }">

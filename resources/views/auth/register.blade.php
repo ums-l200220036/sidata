@@ -1,5 +1,8 @@
+@extends('layouts.app')
+
+@section('title', 'Register')
 <x-navbar>
-    <div class="min-h-screen flex items-center justify-center bg-gray-100 px-4 py-10">
+    <div class="w-full flex items-center justify-center bg-gray-100 px-4 py-10">
         <div class="w-full max-w-xl bg-white rounded-xl shadow-md p-8">
             <div class="mb-6 border-b pb-4">
                 <h2 class="text-2xl font-bold text-[#FE482B]">Tambah User</h2>
