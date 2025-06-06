@@ -9,17 +9,17 @@
                         Unggah File Excel Data Sektoral / Statistik OPD
                     </h1>
     
-                    <!-- Kategori -->
+                    <!-- Indikator -->
                     <label for="kategori" class="block mb-2 font-semibold text-gray-700">
-                        Kategori: <span class="text-red-500">*</span>
+                        Indikator: <span class="text-red-500">*</span>
                     </label>
                     <div class="relative w-full mb-6">
-                        <select id="kategori" name="kategori"
-                            class="w-full px-4 py-3 border border-[#FE482B] rounded-xl shadow-sm text-gray-700 font-medium bg-white focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all duration-200">
-                            <option value="" disabled selected hidden>Pilih Kategori</option>
-                            <option value="kesehatan">Kesehatan</option>
-                            <option value="pendidikan">Pendidikan</option>
-                            <option value="infrastruktur">Infrastruktur</option>
+                        <select id="kategori" name="indikator_id"
+                            class="w-full px-4 py-3 border border-[#FE482B] rounded-xl shadow-sm text-gray-700 font-medium bg-white focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all duration-200" required>
+                            <option value="" disabled selected hidden>Pilih Indikator</option>
+                            @foreach($indikatorList as $indikator)
+                                <option value="{{ $indikator->id }}">{{ $indikator->nama_indikator }}</option>
+                            @endforeach
                         </select>
                     </div>
     
@@ -46,7 +46,7 @@
                         <input 
                             type="file" 
                             id="upload" 
-                            name="file_excel"
+                            name="file"
                             accept=".xls,.xlsx" 
                             class="hidden" 
                             @change="fileName = $event.target.files.length ? $event.target.files[0].name : ''"

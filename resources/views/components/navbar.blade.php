@@ -65,9 +65,9 @@
                     </li>
                 @elseif (Auth::user()->role == 'admin')
                     <li>
-                        <a href="/data-user"
-                           class="{{ request()->is('data-user') ? 'text-black pb-1 border-b-2 border-[#FE482B]' : 'text-black' }} transition">
-                            Manajemen User
+                        <a href="{{route('users.index')}}"
+                           class="{{ request()->is('users.index') ? 'text-black pb-1 border-b-2 border-[#FE482B]' : 'text-black' }} transition">
+                            Kelola Pengguna
                         </a>
                     </li>
                     <li>

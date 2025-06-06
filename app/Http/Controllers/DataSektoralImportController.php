@@ -14,8 +14,11 @@ class DataSektoralImportController extends Controller
      */
     public function form()
     {
+        $user = Auth::user();
+
         return view('user.unggahdata', [
-            'indikatorList' => Indikator::all()
+            'user' => $user,
+            'indikatorList' => Indikator::where('opd_id', $user->opd_id)->get()
         ]);
     }
 

@@ -7,20 +7,20 @@
     @if ($role === 'admin')
         {{-- Admin bisa lihat manajemen OPD, kategori, dan data --}}
         <label
-            :class="selected === 'manajemen_opd' ? 'bg-[#FE482B] text-white' : 'bg-white text-[#FE482B] border border-[#FE482B]'"
+            :class="selected === 'kelola_pengguna' ? 'bg-[#FE482B] text-white' : 'bg-white text-[#FE482B] border border-[#FE482B]'"
             class="cursor-pointer rounded-lg p-6 shadow-md flex flex-col justify-center items-center font-semibold transition duration-300 ease-in-out"
-            for="manajemen_opd"
+            for="kelola_pengguna"
         >
             <input
                 type="radio"
                 id="manajemen_opd"
                 name="kategori"
-                value="manajemen_opd"
+                value="kelola_pengguna"
                 class="hidden"
                 x-model="selected"
             />
             <i class="fa-solid fa-building text-4xl mb-3"></i>
-            Manajemen OPD
+            Kelola Pengguna
         </label>
 
         <label
