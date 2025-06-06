@@ -40,24 +40,38 @@ class DataSektoralImport implements ToCollection
 
     public function collection(Collection $rows)
     {
-        // Ambil baris header yang berisi kecamatan, kelurahan, periode, dan gender
-        $kecamatanRow = $this->fillForward($rows[1]->toArray()); // Baris 2 Excel (index 1)
-        $kelurahanRow = $this->fillForward($rows[2]->toArray()); // Baris 3 Excel (index 2)
-        $periodeRow = $this->fillForward($rows[3]->toArray());   // Baris 4 Excel (index 3)
-        $genderRow = $rows[4]->toArray();                        // Baris 5 Excel (index 4), biasanya tidak merge
+        $kecamatanRow = $this->fillForward($rows[1]->toArray()); // Baris 2
+        $kelurahanRow = $this->fillForward($rows[2]->toArray()); // Baris 3
+        $periodeRow = $this->fillForward($rows[3]->toArray());   // Baris 4
+        $baris5 = $rows[4]->toArray();                            // Baris 5 (gender atau jenis satuan)
 
         $dimensiCache = [];
 
-        // Loop mulai dari baris 6 (index 5) sampai akhir
+        // Deteksi jenis header baris 5: L/P (gender) atau Individu/Keluarga
+        $isGenderBased = false;
+        $isJenisSatuan = false;
+
+        foreach ($baris5 as $val) {
+            $val = strtoupper(trim($val));
+            if (in_array($val, ['L', 'P'])) {
+                $isGenderBased = true;
+                break;
+            } elseif (in_array(strtolower($val), ['individu', 'keluarga'])) {
+                $isJenisSatuan = true;
+                break;
+            }
+        }
+
+        // Loop data dari baris ke-6 (index 5)
         for ($rowIndex = 5; $rowIndex < $rows->count(); $rowIndex++) {
             $row = $rows[$rowIndex];
 
             $dimensiNama = trim($row[0]);
             if (!$dimensiNama || Str::contains(strtolower($dimensiNama), 'jumlah')) {
-                continue; // Lewati baris kosong atau judul "Jumlah"
+                continue;
             }
 
-            // Simpan dimensi jika belum ada
+            // Cache dan insert dimensi
             if (!isset($dimensiCache[$dimensiNama])) {
                 $dimensi = Dimensi::firstOrCreate([
                     'nama_dimensi' => $dimensiNama,
@@ -67,31 +81,25 @@ class DataSektoralImport implements ToCollection
                 Log::info("Dimensi dibuat dengan ID {$dimensi->id} untuk nama: $dimensiNama");
             }
 
-            // Loop kolom mulai kolom 3 (index 2) — sesuaikan jika kolom data berbeda
+            // Loop kolom data (mulai dari kolom 1, karena kolom 0 adalah dimensi)
             for ($col = 1; $col < count($row); $col++) {
                 $nilai = $row[$col];
+
                 if (!is_numeric($nilai)) {
-                    continue; // Skip jika bukan angka
+                    continue;
                 }
 
                 $kecamatan = $kecamatanRow[$col] ?? '';
                 $kelurahan = $kelurahanRow[$col] ?? '';
                 $periodeStr = $periodeRow[$col] ?? '';
-                $jenisKelamin = strtoupper($genderRow[$col] ?? '');
 
                 if (empty($kecamatan) && empty($kelurahan)) {
                     Log::warning("Skip kolom $col karena kecamatan dan kelurahan kosong");
                     continue;
                 }
 
-                // Perbaiki typo 'Semeter' -> 'Semester'
+                // Normalisasi periode
                 $periodeStr = str_ireplace('Semeter', 'Semester', $periodeStr);
-
-                if (empty($periodeStr)) {
-                    Log::warning("Skip kolom $col karena periode kosong");
-                    continue;
-                }
-
                 if (!preg_match('/Tahun (\d{4}) Semester (\d)/i', $periodeStr, $matches)) {
                     Log::warning("Gagal membaca periode di kolom $col: '$periodeStr'");
                     continue;
@@ -100,6 +108,7 @@ class DataSektoralImport implements ToCollection
                 $tahun = $matches[1];
                 $semester = $matches[2];
 
+                // Cari wilayah
                 $wilayah = Wilayah::where('kecamatan', $kecamatan)
                     ->where('kelurahan', $kelurahan)
                     ->first();
@@ -109,17 +118,28 @@ class DataSektoralImport implements ToCollection
                     continue;
                 }
 
+                // Cari periode
                 $periode = Periode::firstOrCreate([
                     'jenis_periode' => 'Semesteran',
                     'tahun' => $tahun,
                     'semester' => $semester,
                 ]);
 
+                // Tentukan satuan
                 $satuan = 'Jiwa';
-                if (in_array($jenisKelamin, ['L', 'P'])) {
-                    $satuan .= " ($jenisKelamin)";
+                if ($isGenderBased) {
+                    $jk = strtoupper($baris5[$col] ?? '');
+                    if (in_array($jk, ['L', 'P'])) {
+                        $satuan = "Jiwa ($jk)";
+                    }
+                } elseif ($isJenisSatuan) {
+                    $jenis = ucfirst(strtolower($baris5[$col] ?? ''));
+                    if (in_array($jenis, ['Individu', 'Keluarga'])) {
+                        $satuan = $jenis;
+                    }
                 }
 
+                // Simpan data
                 DataSektoral::create([
                     'indikator_id' => $this->indikatorId,
                     'opd_id' => $this->indikatorOpdId,
@@ -130,7 +150,7 @@ class DataSektoralImport implements ToCollection
                     'satuan' => $satuan,
                 ]);
 
-                Log::info("Data sektoral disimpan: dimensi $dimensiNama, wilayah $kecamatan-$kelurahan, periode $tahun semester $semester, jenis kelamin $jenisKelamin, nilai $nilai");
+                Log::info("Data disimpan: $dimensiNama, $kecamatan-$kelurahan, $tahun-S$semester, Satuan: $satuan, Nilai: $nilai");
             }
         }
     }
