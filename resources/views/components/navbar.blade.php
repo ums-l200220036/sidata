@@ -11,6 +11,9 @@
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     {{-- vite --}}
     @vite('resources/css/app.css')
+
+    <title>{{ config('app.name', 'Laravel') }}</title>
+    <link rel="icon" type="image/png" href="{{ asset('images/SiData-logo.png') }}">
 </head>
 <body>
     <nav class="bg-white px-24 py-4 flex items-center justify-between">
