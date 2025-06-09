@@ -10,7 +10,6 @@
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     {{-- vite --}}
     @vite('resources/css/app.css')
-
     <title>{{ config('app.name') }} | @yield('title', 'SiData Surakarta - Data Terbuka Kota Surakarta')</title>
     <link rel="icon" type="image/png" href="{{ asset('images/SidataLogoIcon.png') }}">
 </head>

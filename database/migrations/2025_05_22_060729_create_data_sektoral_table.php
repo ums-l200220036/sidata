@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('data_sektoral', function (Blueprint $table) {
             $table->id();
             $table->foreignId('wilayah_id')->constrained('wilayah')->onDelete('cascade');
+            $table->foreignId('opd_id')->constrained('opd')->onDelete('cascade');
             $table->foreignId('periode_id')->constrained('periode')->onDelete('cascade');
             $table->foreignId('indikator_id')->constrained('indikator')->onDelete('cascade');
             $table->foreignId('dimensi_id')->nullable()->constrained('dimensi')->onDelete('set null');
