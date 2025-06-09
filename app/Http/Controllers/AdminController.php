@@ -5,48 +5,82 @@ namespace App\Http\Controllers;
 use App\Http\Requests\UserRequest;
 use App\Models\User;
 use App\Models\Wilayah;
-use App\Models\OPD;
+use App\Models\Opd; // Pastikan menggunakan Opd, bukan OPD
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 
 class AdminController extends Controller
 {
     public function index()
     {
-        $users = User::with('wilayah')->get();
-        $wilayahs = Wilayah::all();
+        $users = User::with(['wilayah.parent', 'opd'])->get(); // Load relasi parent untuk wilayah
+        $kecamatans = Wilayah::whereNull('kelurahan')->get(); // Wilayah yang adalah kecamatan
+        $kelurahans = Wilayah::whereNotNull('kelurahan')->get(); // Wilayah yang adalah kelurahan
+        // Ambil semua OPD, lalu filter di frontend untuk memisahkan kecamatan jika diperlukan
+        $allOpds = Opd::all();
 
-        // Ambil kecamatan saja, yaitu yang parent_id = NULL
-        $kecamatans = Wilayah::whereNull('parent_id')->get();
-
-        $opds = OPD::all();
-
-        return view('admin.kelolapengguna', compact('users', 'wilayahs', 'opds', 'kecamatans'));
+        return view('admin.kelolapengguna', compact('users', 'kecamatans', 'kelurahans', 'allOpds'));
     }
 
     public function store(UserRequest $request)
     {
-        User::create([
+        $userData = [
             'name' => $request->name,
             'email' => $request->email,
             'role' => $request->role,
-            'opd_id' => $request->opd_id,
-            'wilayah_id' => $request->wilayah_id,
             'password' => Hash::make($request->password),
-        ]);
+        ];
+
+        $userData['opd_id'] = null; // Default null
+        $userData['wilayah_id'] = null; // Default null
+
+        if ($request->role === 'opd') {
+            $userData['opd_id'] = $request->opd_id;
+        } elseif ($request->role === 'kecamatan') {
+            // Untuk role 'kecamatan', opd_id dan wilayah_id adalah sama (ID kecamatan)
+            // Cari ID OPD yang namanya sesuai dengan nama kecamatan yang dipilih
+            $kecamatanOpd = Opd::where('nama_opd', Wilayah::find($request->wilayah_id)->kecamatan)->first();
+            if ($kecamatanOpd) {
+                $userData['opd_id'] = $kecamatanOpd->id;
+            }
+            $userData['wilayah_id'] = $request->wilayah_id;
+        } elseif ($request->role === 'kelurahan') {
+            $userData['wilayah_id'] = $request->wilayah_id;
+        }
+
+        User::create($userData);
 
         return redirect()->back()->with('success', 'Pengguna berhasil ditambahkan.');
     }
 
     public function update(UserRequest $request, User $user)
     {
-        $user->update([
+        $userData = [
             'name' => $request->name,
             'email' => $request->email,
             'role' => $request->role,
-            'opd_id' => $request->opd_id,
-            'wilayah_id' => $request->wilayah_id,
-            'password' => $request->password ? Hash::make($request->password) : $user->password,
-        ]);
+        ];
+
+        if ($request->filled('password')) {
+            $userData['password'] = Hash::make($request->password);
+        }
+
+        $userData['opd_id'] = null;
+        $userData['wilayah_id'] = null;
+
+        if ($request->role === 'opd') {
+            $userData['opd_id'] = $request->opd_id;
+        } elseif ($request->role === 'kecamatan') {
+            $kecamatanOpd = Opd::where('nama_opd', Wilayah::find($request->wilayah_id)->kecamatan)->first();
+            if ($kecamatanOpd) {
+                $userData['opd_id'] = $kecamatanOpd->id;
+            }
+            $userData['wilayah_id'] = $request->wilayah_id;
+        } elseif ($request->role === 'kelurahan') {
+            $userData['wilayah_id'] = $request->wilayah_id;
+        }
+
+        $user->update($userData);
 
         return redirect()->back()->with('success', 'Pengguna berhasil diperbarui.');
     }

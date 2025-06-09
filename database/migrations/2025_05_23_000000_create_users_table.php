@@ -13,17 +13,15 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('opd_id')->constrained('opd')->onDelete('cascade');
+            $table->foreignId('opd_id')->nullable()->constrained('opd')->nullOnDelete();
             $table->foreignId('wilayah_id')->nullable()->constrained('wilayah')->nullOnDelete();
-
-
             $table->string('name');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
             
-            $table->enum('role', ['admin', 'opd', 'kelurahan']);
+            $table->enum('role', ['admin', 'opd', 'kecamatan', 'kelurahan']);
             $table->timestamps();
         });
 

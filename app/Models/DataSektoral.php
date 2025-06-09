@@ -17,4 +17,24 @@ class DataSektoral extends Model
         'nilai',
         'satuan',
     ];
+
+        public function wilayah()
+    {
+        return $this->belongsTo(Wilayah::class, 'wilayah_id');
+    }
+
+    public function periode()
+    {
+        return $this->belongsTo(Periode::class, 'periode_id');
+    }
+
+    public function indikator()
+    {
+        return $this->belongsTo(Indikator::class, 'indikator_id');
+    }
+
+    public function dimensi()
+    {
+        return $this->belongsTo(Dimensi::class, 'dimensi_id');
+    }
 }

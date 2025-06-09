@@ -11,7 +11,9 @@ class Wilayah extends Model
     protected $fillable = [
         'kelurahan',
         'kecamatan',
-        'parent_id',   // jangan lupa tambahkan ini supaya bisa diisi massal
+        'parent_id',
+        'created_at',
+        'updated_at',
     ];
 
     // Relasi ke parent (misal kecamatan untuk kelurahan)
@@ -27,15 +29,11 @@ class Wilayah extends Model
     }
 
     // Akses nama wilayah gabungan
-    public function getNamaWilayahAttribute()
+    public function getNamaLengkapAttribute()
     {
-        if ($this->kelurahan) {
-            // jika ada kelurahan, ambil nama kecamatan dari parent
-            return "Kelurahan {$this->kelurahan}, Kecamatan " . ($this->parent ? $this->parent->kecamatan : '-');
-        } elseif ($this->kecamatan) {
-            return "Kecamatan {$this->kecamatan}";
-        } else {
-            return '-';
+        if ($this->kelurahan && $this->parent) {
+            return $this->kelurahan . ' (' . $this->parent->kecamatan . ')';
         }
+        return $this->kecamatan;
     }
 }

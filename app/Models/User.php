@@ -54,4 +54,30 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Wilayah::class, 'wilayah_id');
     }
+
+        public function opd()
+    {
+        return $this->belongsTo(Opd::class);
+    }
+
+    public function getAffiliationNameAttribute()
+    {
+        // Jika user memiliki opd_id (berarti role opd atau kecamatan)
+        if ($this->opd) {
+            return $this->opd->nama_opd;
+        }
+        // Jika user memiliki wilayah_id (berarti role kecamatan atau kelurahan)
+        // Dan tidak memiliki opd_id (misal kelurahan)
+        // Atau jika opd_id nya adalah sebuah kecamatan, kita bisa menampilkan nama wilayah juga
+        elseif ($this->wilayah) {
+            // Jika wilayah ini adalah kelurahan (punya nama kelurahan)
+            if ($this->wilayah->kelurahan) {
+                return $this->wilayah->kelurahan . ' (' . $this->wilayah->kecamatan . ')';
+            }
+            // Jika wilayah ini adalah kecamatan (tidak punya nama kelurahan)
+            return $this->wilayah->kecamatan;
+        }
+        // Jika tidak memiliki afiliasi (misal admin)
+        return '-';
+    }
 }

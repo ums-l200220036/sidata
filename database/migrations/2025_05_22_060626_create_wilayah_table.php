@@ -13,9 +13,12 @@ return new class extends Migration
     {
         Schema::create('wilayah', function (Blueprint $table) {
             $table->id();
-            $table->string('kelurahan');
+            $table->unsignedBigInteger('parent_id')->nullable();
+            $table->string('kelurahan')->nullable();
             $table->string('kecamatan');
             $table->timestamps();
+            $table->foreign('parent_id')->references('id')->on('wilayah')->onDelete('cascade');
+
         });
     }
 
