@@ -16,7 +16,7 @@
              class="w-full h-auto -mt-20" />
     </div>
 
-    <section class="py-5 bg-white text-center">
+    <section class="py-5 flex items-center justify-center flex-col  w-full text-center">
         <p class="text-[#FE482B] text-sm font-medium mb-4">Statistik Data</p>
         <h2 class="text-3xl font-bold mb-10">Kategori Data</h2>
 

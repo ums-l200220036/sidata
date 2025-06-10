@@ -3,7 +3,7 @@
     $role = $role ?? 'guest';
 @endphp
 
-<form class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 px-4" x-data="{ selected: '' }">
+<form class="w-full mx-auto gap-6 px-28" x-data="{ selected: '' }">
     @if ($role === 'admin')
         {{-- Admin bisa lihat manajemen OPD, kategori, dan data --}}
         <label
@@ -55,18 +55,17 @@
             Data Seluruh Kota
         </label>
     @elseif ($role === 'opd')
-        {{-- OPD hanya bisa akses data sesuai opd --}}
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {{-- @foreach ($kategoriList as $kategori) --}}
-                <a 
-                    href=""
+        <div class="grid w-full bg-white grid-cols-1 md:grid-cols-4 gap-4">
+            @foreach ($indikators as $indikator)
+                <a
+                    href="{{ route('data.sektoral.by_indicator', ['indikatorId' => $indikator->id]) }}"
                     :class="selected === '' ? 'bg-[#FE482B] text-white' : 'bg-white text-[#FE482B] border border-[#FE482B]'"
                     class="cursor-pointer rounded-lg p-6 shadow-md flex flex-col justify-center items-center font-semibold transition duration-300 ease-in-out"
                 >
-                    {{-- {{ $kategori->name }} --}}
+                    {{ $indikator->nama_indikator }}
                 </a>
-            {{-- @endforeach --}}
-        </div>        
+            @endforeach
+        </div>       
     @elseif ($role === 'kecamatan')
         {{-- Kelurahan hanya data kelurahan --}}
         <label
