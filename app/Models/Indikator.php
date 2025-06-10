@@ -11,6 +11,7 @@ class Indikator extends Model
     protected $fillable = [
         'opd_id',
         'nama_indikator',
+        'dimensi_label'
     ];
 
     public function opd()

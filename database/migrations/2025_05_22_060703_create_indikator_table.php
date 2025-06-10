@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('indikator', function (Blueprint $table) {
             $table->id();
             $table->foreignId('opd_id')->constrained('opd')->onDelete('cascade');
+            $table->string('dimensi_label')->nullable();
             $table->string('nama_indikator');
             $table->timestamps();
         });

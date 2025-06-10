@@ -74,6 +74,24 @@
             <i class="fa-solid fa-database text-4xl mb-3"></i>
             Data OPD
         </label>
+    @elseif ($role === 'kecamatan')
+        {{-- Kelurahan hanya data kelurahan --}}
+        <label
+            :class="selected === 'data_kecamatan' ? 'bg-[#FE482B] text-white' : 'bg-white text-[#FE482B] border border-[#FE482B]'"
+            class="cursor-pointer rounded-lg p-6 shadow-md flex flex-col justify-center items-center font-semibold transition duration-300 ease-in-out"
+            for="data_kecamatan"
+        >
+            <input
+                type="radio"
+                id="data_kecamatan"
+                name="kategori"
+                value="data_kecamatan"
+                class="hidden"
+                x-model="selected"
+            />
+            <i class="fa-solid fa-house text-4xl mb-3"></i>
+            Data Kecamatan
+        </label>
     @elseif ($role === 'kelurahan')
         {{-- Kelurahan hanya data kelurahan --}}
         <label

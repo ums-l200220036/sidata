@@ -20,6 +20,7 @@ class AdminIndikatorController extends Controller // Nama controller: AdminIndik
     {
         Indikator::create([ // Menggunakan model Indikator
             'nama_indikator' => $request->nama_indikator, // Nama kolom: nama_indikator
+            'dimensi_label' => $request->dimensi_label, // <-- DITAMBAHKAN
             'opd_id' => $request->opd_id,
         ]);
 
@@ -30,6 +31,7 @@ class AdminIndikatorController extends Controller // Nama controller: AdminIndik
     {
         $indikator->update([ // Menggunakan model Indikator
             'nama_indikator' => $request->nama_indikator, // Nama kolom: nama_indikator
+            'dimensi_label' => $request->dimensi_label, // <-- DITAMBAHKAN
             'opd_id' => $request->opd_id,
         ]);
 

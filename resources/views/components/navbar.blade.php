@@ -60,11 +60,11 @@
                         Unggah Data
                     </a>
                 </li>
-            @elseif (Auth::user()->role == 'kelurahan')
+            @elseif(Auth::user()->role == 'kecamatan' || Auth::user()->role == 'kelurahan')
                 <li>
-                    <a href="/data-kelurahan"
-                       class="{{ request()->is('data-kelurahan') ? 'text-black pb-1 border-b-2 border-[#FE482B]' : 'text-black' }} transition">
-                        Data Kelurahan
+                    <a href="/tentang"
+                    class="{{ request()->is('tentang') ? 'text-black pb-1 border-b-2 border-[#FE482B]' : 'text-black' }} transition">
+                        Tentang
                     </a>
                 </li>
             @elseif (Auth::user()->role == 'admin')

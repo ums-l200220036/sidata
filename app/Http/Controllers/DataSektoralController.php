@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\DataSektoral;
-use App\Models\Indikator; // Jika Anda perlu mengambil nama indikator
+use App\Models\Indikator; // Pastikan Anda mengimpor model Indikator
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log; // Untuk debugging
 
@@ -17,9 +17,17 @@ class DataSektoralController extends Controller
      */
     public function showIndicatorData($indikatorId)
     {
-        // Mendapatkan nama indikator untuk judul (opsional)
+        // Mendapatkan objek Indikator
         $indikator = Indikator::find($indikatorId);
+
+        // Mendapatkan nama indikator untuk judul halaman
         $indikatorTitle = $indikator ? $indikator->nama_indikator : 'Data Sektoral';
+
+        // --- PERBAIKAN DI SINI ---
+        // Ambil label dimensi dari kolom 'dimensi_label' di tabel indikator
+        // Jika kolomnya kosong atau indikator tidak ditemukan, gunakan 'Dimensi' sebagai default
+        $dimensiHeader = $indikator ? ($indikator->dimensi_label ?? 'Dimensi') : 'Dimensi';
+        // --- AKHIR PERBAIKAN ---
 
         // Tahun yang ingin ditampilkan di header tabel
         $targetYears = [2021, 2022, 2023, 2024]; // Sesuaikan tahun yang Anda inginkan
@@ -46,7 +54,7 @@ class DataSektoralController extends Controller
             // Inisialisasi struktur untuk kecamatan
             if (!isset($structuredData[$kecamatan])) {
                 $structuredData[$kecamatan] = [
-                    'rowspan' => 0, // Akan dihitung nanti
+                    'rowspan' => 0,
                     'kelurahan' => [],
                 ];
             }
@@ -54,14 +62,13 @@ class DataSektoralController extends Controller
             // Inisialisasi struktur untuk kelurahan di bawah kecamatan
             if (!isset($structuredData[$kecamatan]['kelurahan'][$kelurahan])) {
                 $structuredData[$kecamatan]['kelurahan'][$kelurahan] = [
-                    'rowspan' => 0, // Akan dihitung nanti
+                    'rowspan' => 0,
                     'dimensi' => [],
                 ];
             }
 
-            // Inisialisasi struktur untuk dimensi (Agama) di bawah kelurahan
+            // Inisialisasi struktur untuk dimensi di bawah kelurahan
             if (!isset($structuredData[$kecamatan]['kelurahan'][$kelurahan]['dimensi'][$dimensiNama])) {
-                // Inisialisasi nilai untuk semua tahun target dengan null atau 0
                 $structuredData[$kecamatan]['kelurahan'][$kelurahan]['dimensi'][$dimensiNama] = array_fill_keys($targetYears, null);
             }
 
@@ -74,23 +81,21 @@ class DataSektoralController extends Controller
         // Hitung rowspan untuk setiap kelurahan dan kecamatan
         foreach ($structuredData as $kecamatanName => &$kecamatanData) {
             foreach ($kecamatanData['kelurahan'] as $kelurahanName => &$kelurahanData) {
-                // Rowspan kelurahan = jumlah dimensi (agama) di dalamnya
                 $kelurahanData['rowspan'] = count($kelurahanData['dimensi']);
-                // Tambahkan ke rowspan kecamatan
                 $kecamatanData['rowspan'] += $kelurahanData['rowspan'];
             }
         }
         // Pastikan untuk unset referensi setelah loop selesai
         unset($kecamatanData, $kelurahanData);
 
-
         // Debugging (opsional)
         // Log::info('Structured Data:', $structuredData);
 
-        return view('tabel', [ // Ganti 'data.sektoral_table' dengan path view Anda
+        return view('tabel', [ // Pastikan 'tabel' adalah nama view Anda yang benar
             'indikatorTitle' => $indikatorTitle,
             'structuredData' => $structuredData,
             'targetYears' => $targetYears,
+            'dimensiHeader' => $dimensiHeader, // <-- INI YANG DITAMBAHKAN
         ]);
     }
 }

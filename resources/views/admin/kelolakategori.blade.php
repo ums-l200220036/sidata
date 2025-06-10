@@ -14,15 +14,21 @@
         newIndikatorData: {
             nama_indikator: '{{ old('nama_indikator', '') }}',
             opd_id: '{{ old('opd_id', '') }}',
+            dimensi_label: '{{ old('dimensi_label', '') }}', // <-- DITAMBAHKAN
         },
         editIndikator: { 
-            id: {{ old('edit_user_id', 'null') }}, 
-            name_indikator: '{{ old('name', '') }}',
+            id: {{ old('edit_indikator_id', 'null') }}, 
+            nama_indikator: '{{ old('nama_indikator', '') }}', 
             opd_id: '{{ old('opd_id', '') }}',
+            dimensi_label: '{{ old('dimensi_label', '') }}', // <-- DITAMBAHKAN
         },
         openEditModal(indikator) {
-            this.editIndikator = { ...indikator };
-            this.editIndikator.opd_id = indikator.opd_id ?? '';
+            this.editIndikator = {
+                id: indikator.id,
+                nama_indikator: indikator.nama_indikator,
+                opd_id: indikator.opd_id ?? '',
+                dimensi_label: indikator.dimensi_label ?? '', // <-- DITAMBAHKAN UNTUK DATA EDIT
+            };
             this.showEditModal = true;
         }
     }"
@@ -31,7 +37,7 @@
         <div class="flex items-center justify-between mb-4">
             <h2 class="text-2xl font-semibold text-gray-800">Kelola Indikator</h2>
             <button
-                @click="showModal = true; newIndikatorData.nama_indikator = ''; newIndikatorData.opd_id = '';"
+                @click="showModal = true; newIndikatorData.nama_indikator = ''; newIndikatorData.opd_id = ''; newIndikatorData.dimensi_label = '';" // <-- RESET DIMENSI_LABEL
                 class="inline-flex items-center bg-[#FE482B] text-white text-sm font-semibold px-4 py-2 rounded-lg shadow hover:bg-[#e03e22] transition">
                 <i class="fas fa-plus mr-2"></i> Tambah Indikator
             </button>
@@ -52,19 +58,20 @@
                     @endforeach
                 </ul>
                 {{-- Hidden input untuk re-open modal jika ada error validasi --}}
-                {{-- Penting: is_edit dan edit_indikator_id/nama_indikator/opd_id harus konsisten dengan old() --}}
                 @if(old('is_edit') === 'true')
                     <input type="hidden" x-init="showEditModal = true" name="is_edit_error_flag" value="true">
                     <input type="hidden" x-init="
                         editIndikator.id = '{{ old('edit_indikator_id') ?? 'null' }}';
                         editIndikator.nama_indikator = '{{ addslashes(old('nama_indikator') ?? '') }}';
                         editIndikator.opd_id = '{{ old('opd_id') ?? '' }}';
+                        editIndikator.dimensi_label = '{{ addslashes(old('dimensi_label') ?? '') }}'; // <-- DITAMBAHKAN
                     " name="edit_indikator_data_flag" value="true">
-                @elseif
+                @else
                     <input type="hidden" x-init="showModal = true" name="is_add_error_flag" value="true">
                     <input type="hidden" x-init="
                         newIndikatorData.nama_indikator = '{{ addslashes(old('nama_indikator') ?? '') }}';
                         newIndikatorData.opd_id = '{{ old('opd_id') ?? '' }}';
+                        newIndikatorData.dimensi_label = '{{ addslashes(old('dimensi_label') ?? '') }}'; // <-- DITAMBAHKAN
                     " name="add_indikator_data_flag" value="true">
                 @endif
             </div>
@@ -78,6 +85,7 @@
                     <tr>
                         <th class="px-4 py-3 text-left">No</th>
                         <th class="px-4 py-3 text-left">Nama Indikator</th>
+                        <th class="px-4 py-3 text-left">Label Dimensi</th> {{-- <-- UBAH TEKS HEADER TABEL --}}
                         <th class="px-4 py-3 text-left">OPD</th>
                         <th class="px-4 py-3 text-left">Aksi</th>
                     </tr>
@@ -87,6 +95,7 @@
                     <tr class="hover:bg-gray-50 transition">
                         <td class="px-4 py-2">{{ $index + 1 }}</td>
                         <td class="px-4 py-2">{{ $indikator->nama_indikator }}</td>
+                        <td class="px-4 py-2">{{ $indikator->dimensi_label ?? '-' }}</td> {{-- <-- TAMPILKAN DIMENSI_LABEL --}}
                         <td class="px-4 py-2">
                             <span class="bg-blue-100 text-blue-800 text-xs font-semibold px-3 py-1 rounded-full">
                                 {{ $indikator->opd->nama_opd ?? '-' }}
@@ -97,7 +106,8 @@
                                 @click="openEditModal({
                                     id: {{ $indikator->id }},
                                     nama_indikator: '{{ addslashes($indikator->nama_indikator) }}',
-                                    opd_id: '{{ $indikator->opd_id }}'
+                                    opd_id: '{{ $indikator->opd_id }}',
+                                    dimensi_label: '{{ addslashes($indikator->dimensi_label ?? '') }}' // <-- TERUSKAN DIMENSI_LABEL
                                 })"
                                 class="text-blue-600 hover:text-blue-800 text-sm font-medium inline-flex items-center">
                                 <i class="fas fa-edit mr-1"></i> Edit
@@ -113,7 +123,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="4" class="px-4 py-2 text-center text-gray-500">Tidak ada data indikator.</td>
+                        <td colspan="5" class="px-4 py-2 text-center text-gray-500">Tidak ada data indikator.</td> {{-- <-- UBAH COLSPAN --}}
                     </tr>
                     @endforelse
                 </tbody>
@@ -141,20 +151,20 @@
                     @csrf
                     <input type="hidden" name="is_edit" value="false">
                     <div class="mb-4">
-                        <label class="block text-sm text-gray-700 font-medium mb-1">Nama Indikator</label>
-                        <input type="text" name="nama_indikator" x-model="newIndikatorData.nama_indikator" required
+                        <label for="nama_indikator_add" class="block text-sm text-gray-700 font-medium mb-1">Nama Indikator</label>
+                        <input type="text" id="nama_indikator_add" name="nama_indikator" x-model="newIndikatorData.nama_indikator" required
                             class="w-full px-4 py-2 border rounded focus:ring-[#FE482B] focus:border-[#FE482B] shadow-sm @error('nama_indikator') border-red-500 @enderror">
                         @error('nama_indikator')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
                     </div>
                     <div class="mb-4">
-                        <label class="block text-sm text-gray-700 font-medium mb-1">Label Indikator</label>
-                        <input type="text" name="label_indikator" x-model="newIndikatorData.label_indikator" required
-                            class="w-full px-4 py-2 border rounded focus:ring-[#FE482B] focus:border-[#FE482B] shadow-sm @error('label_indikator') border-red-500 @enderror">
-                        @error('label_indikator')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
+                        <label for="dimensi_label_add" class="block text-sm text-gray-700 font-medium mb-1">Label Dimensi</label> {{-- <-- UBAH TEKS LABEL --}}
+                        <input type="text" id="dimensi_label_add" name="dimensi_label" x-model="newIndikatorData.dimensi_label" required
+                            class="w-full px-4 py-2 border rounded focus:ring-[#FE482B] focus:border-[#FE482B] shadow-sm @error('dimensi_label') border-red-500 @enderror">
+                        @error('dimensi_label')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
                     </div>
                     <div class="mb-4">
-                        <label class="block text-sm text-gray-700 font-medium mb-1">OPD</label>
-                        <select name="opd_id" x-model="newIndikatorData.opd_id" required
+                        <label for="opd_id_add" class="block text-sm text-gray-700 font-medium mb-1">OPD</label>
+                        <select id="opd_id_add" name="opd_id" x-model="newIndikatorData.opd_id" required
                             class="w-full px-4 py-2 border rounded focus:ring-[#FE482B] focus:border-[#FE482B] shadow-sm @error('opd_id') border-red-500 @enderror">
                             <option value="" disabled>-- Pilih OPD --</option>
                             <template x-for="opd in opds" :key="opd.id">
@@ -194,20 +204,20 @@
                     <input type="hidden" name="is_edit" value="true">
                     <input type="hidden" name="edit_indikator_id" :value="editIndikator.id">
                     <div class="mb-4">
-                        <label class="block text-sm text-gray-700 font-medium mb-1">Nama Indikator</label>
-                        <input type="text" name="nama_indikator" x-model="editIndikator.nama_indikator" required
+                        <label for="nama_indikator_edit" class="block text-sm text-gray-700 font-medium mb-1">Nama Indikator</label>
+                        <input type="text" id="nama_indikator_edit" name="nama_indikator" x-model="editIndikator.nama_indikator" required
                             class="w-full px-4 py-2 border rounded focus:ring-[#FE482B] focus:border-[#FE482B] shadow-sm @error('nama_indikator') border-red-500 @enderror">
                         @error('nama_indikator')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
                     </div>
                     <div class="mb-4">
-                        <label class="block text-sm text-gray-700 font-medium mb-1">Nama Indikator</label>
-                        <input type="text" name="label_indikator" x-model="editIndikator.label_indikator" required
-                            class="w-full px-4 py-2 border rounded focus:ring-[#FE482B] focus:border-[#FE482B] shadow-sm @error('label_indikator') border-red-500 @enderror">
-                        @error('label_indikator')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
+                        <label for="dimensi_label_edit" class="block text-sm text-gray-700 font-medium mb-1">Label Dimensi</label> {{-- <-- UBAH TEKS LABEL --}}
+                        <input type="text" id="dimensi_label_edit" name="dimensi_label" x-model="editIndikator.dimensi_label" required
+                            class="w-full px-4 py-2 border rounded focus:ring-[#FE482B] focus:border-[#FE482B] shadow-sm @error('dimensi_label') border-red-500 @enderror">
+                        @error('dimensi_label')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
                     </div>
                     <div class="mb-4">
-                        <label class="block text-sm text-gray-700 font-medium mb-1">OPD</label>
-                        <select name="opd_id" x-model="editIndikator.opd_id" required
+                        <label for="opd_id_edit" class="block text-sm text-gray-700 font-medium mb-1">OPD</label>
+                        <select id="opd_id_edit" name="opd_id" x-model="editIndikator.opd_id" required
                             class="w-full px-4 py-2 border rounded focus:ring-[#FE482B] focus:border-[#FE482B] shadow-sm @error('opd_id') border-red-500 @enderror">
                             <option value="" disabled>-- Pilih OPD --</option>
                             <template x-for="opd in opds" :key="opd.id">

@@ -15,7 +15,7 @@
                     <tr class="bg-blue-200 text-blue-900 font-semibold">
                         <th rowspan="2" class="border border-gray-200 px-3 py-2">Kecamatan</th>
                         <th rowspan="2" class="border border-gray-200 px-3 py-2">Kelurahan</th>
-                        <th rowspan="2" class="border border-gray-200 px-3 py-2">Agama</th>
+                        <th rowspan="2" class="border border-gray-200 px-3 py-2">{{ $dimensiHeader }}</th> {{-- <-- PERBAIKAN DI SINI --}}
                         <th colspan="{{ count($targetYears) }}" class="border border-gray-200 px-3 py-2">Tahun</th>
                     </tr>
                     <tr class="bg-blue-500 text-white font-semibold">
