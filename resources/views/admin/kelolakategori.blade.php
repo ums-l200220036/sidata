@@ -60,7 +60,7 @@
                         editIndikator.nama_indikator = '{{ addslashes(old('nama_indikator') ?? '') }}';
                         editIndikator.opd_id = '{{ old('opd_id') ?? '' }}';
                     " name="edit_indikator_data_flag" value="true">
-                @else
+                @elseif
                     <input type="hidden" x-init="showModal = true" name="is_add_error_flag" value="true">
                     <input type="hidden" x-init="
                         newIndikatorData.nama_indikator = '{{ addslashes(old('nama_indikator') ?? '') }}';
@@ -147,6 +147,12 @@
                         @error('nama_indikator')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
                     </div>
                     <div class="mb-4">
+                        <label class="block text-sm text-gray-700 font-medium mb-1">Label Indikator</label>
+                        <input type="text" name="label_indikator" x-model="newIndikatorData.label_indikator" required
+                            class="w-full px-4 py-2 border rounded focus:ring-[#FE482B] focus:border-[#FE482B] shadow-sm @error('label_indikator') border-red-500 @enderror">
+                        @error('label_indikator')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
+                    </div>
+                    <div class="mb-4">
                         <label class="block text-sm text-gray-700 font-medium mb-1">OPD</label>
                         <select name="opd_id" x-model="newIndikatorData.opd_id" required
                             class="w-full px-4 py-2 border rounded focus:ring-[#FE482B] focus:border-[#FE482B] shadow-sm @error('opd_id') border-red-500 @enderror">
@@ -192,6 +198,12 @@
                         <input type="text" name="nama_indikator" x-model="editIndikator.nama_indikator" required
                             class="w-full px-4 py-2 border rounded focus:ring-[#FE482B] focus:border-[#FE482B] shadow-sm @error('nama_indikator') border-red-500 @enderror">
                         @error('nama_indikator')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-sm text-gray-700 font-medium mb-1">Nama Indikator</label>
+                        <input type="text" name="label_indikator" x-model="editIndikator.label_indikator" required
+                            class="w-full px-4 py-2 border rounded focus:ring-[#FE482B] focus:border-[#FE482B] shadow-sm @error('label_indikator') border-red-500 @enderror">
+                        @error('label_indikator')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
                     </div>
                     <div class="mb-4">
                         <label class="block text-sm text-gray-700 font-medium mb-1">OPD</label>
