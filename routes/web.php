@@ -6,6 +6,7 @@ use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DataSektoralImportController;
 use App\Http\Controllers\AdminIndikatorController;
+use App\Http\Controllers\DataSektoralController;
 
 Route::get('/', function () {
     return view('home');
@@ -43,7 +44,8 @@ Route::get('/tentang', function () {
     return view('tentang');
 })->name('tentang');
 
-
 Route::get('/tabel', function () {
-    return view('tabel');
-})->name('tabel');
+    return view('tabelbackup');
+})->name('tentang');
+
+Route::get('/data-sektoral/{indikatorId}', [DataSektoralController::class, 'showIndicatorData'])->name('data.sektoral.by_indicator');
