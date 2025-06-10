@@ -6,7 +6,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Casts\Attribute; // Penting: Import untuk accessor
 use App\Models\Wilayah;
+use App\Models\Opd; // Penting: Import model Opd
 
 class User extends Authenticatable
 {
@@ -55,29 +57,46 @@ class User extends Authenticatable
         return $this->belongsTo(Wilayah::class, 'wilayah_id');
     }
 
-        public function opd()
+    public function opd()
     {
         return $this->belongsTo(Opd::class);
     }
 
-    public function getAffiliationNameAttribute()
+    /**
+     * Accessor untuk mendapatkan nama afiliasi berdasarkan role pengguna.
+     *
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     */
+    protected function affiliationName(): Attribute // Perubahan di sini, menggunakan Attribute class
     {
-        // Jika user memiliki opd_id (berarti role opd atau kecamatan)
-        if ($this->opd) {
-            return $this->opd->nama_opd;
-        }
-        // Jika user memiliki wilayah_id (berarti role kecamatan atau kelurahan)
-        // Dan tidak memiliki opd_id (misal kelurahan)
-        // Atau jika opd_id nya adalah sebuah kecamatan, kita bisa menampilkan nama wilayah juga
-        elseif ($this->wilayah) {
-            // Jika wilayah ini adalah kelurahan (punya nama kelurahan)
-            if ($this->wilayah->kelurahan) {
-                return $this->wilayah->kelurahan . ' (' . $this->wilayah->kecamatan . ')';
-            }
-            // Jika wilayah ini adalah kecamatan (tidak punya nama kelurahan)
-            return $this->wilayah->kecamatan;
-        }
-        // Jika tidak memiliki afiliasi (misal admin)
-        return '-';
+        return Attribute::make(
+            get: function () {
+                if ($this->role === 'opd' && $this->opd) {
+                    return $this->opd->nama_opd;
+                }
+                // Logika untuk role 'kecamatan' dan 'kelurahan'
+                // Kita perlu memastikan bahwa `wilayah` ada dan juga `opd` jika role-nya 'kecamatan'
+                // karena kecamatan memiliki opd_id juga.
+                elseif ($this->role === 'kecamatan' && $this->wilayah) {
+                    // Jika role adalah kecamatan, kita bisa tampilkan nama kecamatannya
+                    return 'Kecamatan ' . $this->wilayah->kecamatan;
+                }
+                elseif ($this->role === 'kelurahan' && $this->wilayah) {
+                    // Untuk kelurahan, tampilkan kelurahan dan kecamatannya
+                    // Asumsi model Wilayah memiliki relasi 'parent' ke kecamatan
+                    // jika struktur wilayah Anda adalah kelurahan-kecamatan.
+                    // Jika tidak, Anda mungkin perlu menyesuaikan bagaimana Anda mendapatkan nama kecamatan.
+                    if ($this->wilayah->kelurahan) {
+                        // Cek apakah ada parent (kecamatan) dari kelurahan ini
+                        if ($this->wilayah->parent) {
+                            return 'Kelurahan ' . $this->wilayah->kelurahan . ' (' . $this->wilayah->parent->kecamatan . ')';
+                        }
+                        return 'Kelurahan ' . $this->wilayah->kelurahan; // Fallback jika tidak ada parent
+                    }
+                }
+                // Untuk role 'admin' atau jika tidak ada afiliasi yang cocok
+                return '-';
+            },
+        );
     }
 }

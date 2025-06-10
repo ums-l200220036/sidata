@@ -48,4 +48,12 @@ Route::get('/tabel', function () {
     return view('tabelbackup');
 })->name('tentang');
 
+Route::get('/datasektoral-kecamatan', function () {
+    return view('tabel-kecamatan');
+})->name('tabel.kecamatan');
+
+Route::get('/datasektoral-kelurahan', function () {
+    return view('tabel-kelurahan');
+})->name('tabel.kelurahan');
+
 Route::get('/data-sektoral/{indikatorId}', [DataSektoralController::class, 'showIndicatorData'])->name('data.sektoral.by_indicator');

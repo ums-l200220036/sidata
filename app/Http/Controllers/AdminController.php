@@ -13,10 +13,17 @@ class AdminController extends Controller
 {
     public function index()
     {
-        $users = User::with(['wilayah.parent', 'opd'])->get(); // Load relasi parent untuk wilayah
+        // Memuat relasi 'wilayah' dan 'opd'.
+        // Untuk 'affiliation_name' yang merupakan accessor, pastikan model User memiliki accessor tersebut.
+        $users = User::with(['wilayah.parent', 'opd'])->get()->map(function ($user) {
+            // Tambahkan 'affiliation_name' ke setiap objek user
+            // Accessor affiliation_name akan otomatis dipanggil
+            $user->affiliation_name = $user->affiliation_name; // Ini akan memanggil accessor pada model User
+            return $user;
+        });
+
         $kecamatans = Wilayah::whereNull('kelurahan')->get(); // Wilayah yang adalah kecamatan
         $kelurahans = Wilayah::whereNotNull('kelurahan')->get(); // Wilayah yang adalah kelurahan
-        // Ambil semua OPD, lalu filter di frontend untuk memisahkan kecamatan jika diperlukan
         $allOpds = Opd::all();
 
         return view('admin.kelolapengguna', compact('users', 'kecamatans', 'kelurahans', 'allOpds'));
@@ -39,11 +46,14 @@ class AdminController extends Controller
         } elseif ($request->role === 'kecamatan') {
             // Untuk role 'kecamatan', opd_id dan wilayah_id adalah sama (ID kecamatan)
             // Cari ID OPD yang namanya sesuai dengan nama kecamatan yang dipilih
-            $kecamatanOpd = Opd::where('nama_opd', Wilayah::find($request->wilayah_id)->kecamatan)->first();
-            if ($kecamatanOpd) {
-                $userData['opd_id'] = $kecamatanOpd->id;
+            $kecamatanWilayah = Wilayah::find($request->wilayah_id);
+            if ($kecamatanWilayah) {
+                $kecamatanOpd = Opd::where('nama_opd', 'LIKE', '%' . $kecamatanWilayah->kecamatan . '%')->first(); // Gunakan LIKE
+                if ($kecamatanOpd) {
+                    $userData['opd_id'] = $kecamatanOpd->id;
+                }
+                $userData['wilayah_id'] = $request->wilayah_id;
             }
-            $userData['wilayah_id'] = $request->wilayah_id;
         } elseif ($request->role === 'kelurahan') {
             $userData['wilayah_id'] = $request->wilayah_id;
         }
@@ -71,11 +81,14 @@ class AdminController extends Controller
         if ($request->role === 'opd') {
             $userData['opd_id'] = $request->opd_id;
         } elseif ($request->role === 'kecamatan') {
-            $kecamatanOpd = Opd::where('nama_opd', Wilayah::find($request->wilayah_id)->kecamatan)->first();
-            if ($kecamatanOpd) {
-                $userData['opd_id'] = $kecamatanOpd->id;
+            $kecamatanWilayah = Wilayah::find($request->wilayah_id);
+            if ($kecamatanWilayah) {
+                $kecamatanOpd = Opd::where('nama_opd', 'LIKE', '%' . $kecamatanWilayah->kecamatan . '%')->first(); // Gunakan LIKE
+                if ($kecamatanOpd) {
+                    $userData['opd_id'] = $kecamatanOpd->id;
+                }
+                $userData['wilayah_id'] = $request->wilayah_id;
             }
-            $userData['wilayah_id'] = $request->wilayah_id;
         } elseif ($request->role === 'kelurahan') {
             $userData['wilayah_id'] = $request->wilayah_id;
         }
