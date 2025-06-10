@@ -42,3 +42,8 @@ require __DIR__.'/auth.php';
 Route::get('/tentang', function () {
     return view('tentang');
 })->name('tentang');
+
+
+Route::get('/tabel', function () {
+    return view('tabel');
+})->name('tabel');
