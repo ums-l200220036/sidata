@@ -54,18 +54,13 @@
                             Ingat Saya
                         </label>
 
-                        @if (Route::has('password.request'))
-                            <a class="text-white text-sm underline hover:text-gray-300"
-                               href="{{ route('password.request') }}">
-                                Pusat Bantuan ?
-                            </a>
-                        @endif
+                       
                     </div>
 
                     <!-- Submit -->
                     <div>
                         <button type="submit"
-                                class="w-full bg-white text-[#FE482B] font-semibold px-4 py-2 rounded hover:bg-[#FE482B] hover:text-white hover:border hover:border-white transition">
+                                class="w-full bg-white text-[#FE482B] font-semibold px-4 py-2 rounded hover:bg-[#FE482B] hover:text-white hover:outline hover:outline-1 hover:outline-white transition">
                             Masuk
                         </button>
                     </div>

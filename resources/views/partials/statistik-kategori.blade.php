@@ -68,38 +68,31 @@
         </div>       
     @elseif ($role === 'kecamatan')
         {{-- Kelurahan hanya data kelurahan --}}
-        <label
-            :class="selected === 'data_kecamatan' ? 'bg-[#FE482B] text-white' : 'bg-white text-[#FE482B] border border-[#FE482B]'"
-            class="cursor-pointer rounded-lg p-6 shadow-md flex flex-col justify-center items-center font-semibold transition duration-300 ease-in-out"
-            for="data_kecamatan"
-        >
-            <input
-                type="radio"
-                id="data_kecamatan"
-                name="kategori"
-                value="data_kecamatan"
-                class="hidden"
-                x-model="selected"
-            />
-            Data Kecamatan
-        </label>
+        <div class="grid w-full bg-white grid-cols-1 md:grid-cols-4 gap-4">
+            {{-- @foreach ($indikators as $indikator)
+                <a
+                    
+                    href="{{ route('data.sektoral.by_indicator', ['indikatorId' => $indikator->id]) }}"
+                    :class="selected == '{{ $indikator->id }}' ? 'bg-[#FE482B] text-white' : 'bg-white text-[#FE482B] border border-[#FE482B]'"
+                    class="cursor-pointer rounded-lg p-6 shadow-md flex flex-col justify-center items-center font-semibold transition duration-300 ease-in-out"
+                >
+                    {{ $indikator->nama_indikator }}
+                </a>
+            @endforeach --}}
+        </div>
     @elseif ($role === 'kelurahan')
         {{-- Kelurahan hanya data kelurahan --}}
-        <label
-            :class="selected === 'data_kelurahan' ? 'bg-[#FE482B] text-white' : 'bg-white text-[#FE482B] border border-[#FE482B]'"
-            class="cursor-pointer rounded-lg p-6 shadow-md flex flex-col justify-center items-center font-semibold transition duration-300 ease-in-out"
-            for="data_kelurahan"
-        >
-            <input
-                type="radio"
-                id="data_kelurahan"
-                name="kategori"
-                value="data_kelurahan"
-                class="hidden"
-                x-model="selected"
-            />
-                Data Kelurahan
-        </label>
+        <div class="grid w-full bg-white grid-cols-1 md:grid-cols-4 gap-4">
+            {{-- @foreach ($indikators as $indikator)
+                <a
+                    :class="selected === 'data_kelurahan' ? 'bg-[#FE482B] text-white' : 'bg-white text-[#FE482B] border border-[#FE482B]'"
+                    class="cursor-pointer rounded-lg p-6 shadow-md flex flex-col justify-center items-center font-semibold transition duration-300 ease-in-out"
+                    href="{{ route('data.sektoral.kelurahan') }}" 
+                >
+                    Data Kelurahan
+                </a>
+            @endforeach --}}
+        </div>
     @else
         {{-- Guest / lain-lain --}}
         <p class="text-gray-500">Anda tidak memiliki akses data.</p>
