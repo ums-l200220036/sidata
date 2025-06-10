@@ -3,104 +3,93 @@
 @section('title', 'Data Table')
 
 <x-navbar>
+<section class="min-h-screen overflow-y-auto bg-white p-4">
+    <div class="container mx-auto px-4 py-6">
+        <h2 class="text-lg font-bold mb-4 text-center">
+            Jumlah Sekolah, Guru, dan Murid Taman Kanak-Kanak (TK)
+        </h2>
 
-    <section class="min-h-screen overflow-y-auto bg-white p-4">
-        <div class="container mx-auto px-4 py-6">
-            <h2 class="text-lg font-bold mb-4 text-center">
-                Jumlah Sekolah, Guru, dan Murid Taman Kanak-Kanak (TK)
-            </h2>
-        
-            @php
-            $data = [
-                'Laweyan' => [
-                    'kelurahan' => ['Gilingan', 'Kerten', 'Pajang'],
-                    'data' => [
-                        'Sekolah' => [
-                            'Negeri' => [1, 1, 1, 1],
-                            'Swasta' => [54, 54, 54, 54],
-                        ],
-                        'Guru' => [
-                            'Negeri' => [3, 3, 4, 6],
-                            'Swasta' => [217, 207, 287, 254],
-                        ],
-                        'Murid' => [
-                            'Negeri' => [40, 31, 29, 39],
-                            'Swasta' => [1986, 2317, 2314, 2347],
-                        ],
-                    ],
+        @php
+        $data = [
+            'Laweyan' => [
+                'kelurahan' => ['Gilingan', 'Kerten', 'Pajang'],
+                'data' => [
+                    'Islam' => [1986, 2317, 2314, 2347],
+                    'Hindu'=> [40, 31, 29, 39],
+                    'Budha'=> [20, 18, 15, 12],
+                    'Katholik'=> [22, 21, 20, 19],
+                    'Kristen'=> [50, 53, 49, 45],
+                    'Lain-lain'=> [3, 2, 1, 0],
                 ],
-                'Serengan' => [
-                    'kelurahan' => ['Jayengan', 'Danukusuman', 'Serengan'],
-                    'data' => [
-                        'Sekolah' => [
-                            'Negeri' => [1, 1, 1, 1],
-                            'Swasta' => [26, 26, 23, 22],
-                        ],
-                        'Guru' => [
-                            'Negeri' => [3, 3, 4, 5],
-                            'Swasta' => [65, 65, 98, 84],
-                        ],
-                        'Murid' => [
-                            'Negeri' => [52, 53, 56, 56],
-                            'Swasta' => [795, 1017, 1026, 959],
-                        ],
-                    ],
+            ],
+            'Serengan' => [
+                'kelurahan' => ['Jayengan', 'Danukusuman', 'Serengan'],
+                'data' => [
+                    'Islam' => [1500, 1600, 1700, 1800],
+                    'Hindu'=> [30, 28, 25, 20],
+                    'Budha'=> [10, 8, 6, 5],
+                    'Katholik'=> [18, 19, 20, 22],
+                    'Kristen'=> [40, 42, 41, 39],
+                    'Lain-lain'=> [1, 2, 0, 0],
                 ],
-            ];
-            @endphp
-        
-            <div class="overflow-x-auto">
-                <table class="min-w-full border border-gray-300 text-sm text-center">
-                    <thead>
-                        <tr class="bg-red-200 text-gray-900">
-                            <th rowspan="2" class="border border-gray-300 px-2 py-1">Kecamatan</th>
-                            <th rowspan="2" class="border border-gray-300 px-2 py-1">Kelurahan</th>
-                            <th rowspan="2" class="border border-gray-300 px-2 py-1">Jenis GTK</th>
-                            <th rowspan="2" class="border border-gray-300 px-2 py-1">Status</th>
-                            <th colspan="4" class="border border-gray-300 px-2 py-1">Tahun</th>
-                        </tr>
-                        <tr class="bg-red-500 text-white font-semibold">
-                            <th class="border border-gray-300 px-2 py-1">2021</th>
-                            <th class="border border-gray-300 px-2 py-1">2022</th>
-                            <th class="border border-gray-300 px-2 py-1">2023</th>
-                            <th class="border border-gray-300 px-2 py-1">2024</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($data as $kecamatan => $info)
-                            @foreach($info['kelurahan'] as $kelurahan)
-                                @php $gtkItems = $info['data']; @endphp
-                                @php $rowspanKelurahan = count($gtkItems) * 2; @endphp
-        
-                                @foreach($gtkItems as $jenisGtk => $statusItems)
-                                    @foreach($statusItems as $status => $values)
-                                        <tr>
-                                            @if($loop->parent->parent->first && $loop->parent->first && $loop->first)
-                                                <td rowspan="{{ count($info['kelurahan']) * $rowspanKelurahan }}" class="border border-gray-300 px-2 py-1 font-medium">
-                                                    {{ $kecamatan }}
-                                                </td>
-                                            @endif
-        
-                                            @if($loop->parent->first && $loop->first)
-                                                <td rowspan="{{ $rowspanKelurahan }}" class="border border-gray-300 px-2 py-1">{{ $kelurahan }}</td>
-                                            @endif
-        
-                                            @if($loop->first)
-                                                <td rowspan="2" class="border border-gray-300 px-2 py-1">{{ $jenisGtk }}</td>
-                                            @endif
-        
-                                            <td class="border border-gray-300 px-2 py-1">{{ $status }}</td>
-                                            @foreach($values as $value)
-                                                <td class="border border-gray-300 px-2 py-1">{{ $value }}</td>
-                                            @endforeach
-                                        </tr>
+            ],
+        ];
+        @endphp
+
+        <div class="overflow-x-auto">
+            <table class="min-w-full border border-gray-200 text-sm text-center rounded-lg overflow-hidden">
+                <thead>
+                    <tr class="bg-blue-200 text-blue-900 font-semibold">
+                        <th rowspan="2" class="border border-gray-200 px-3 py-2">Kecamatan</th>
+                        <th rowspan="2" class="border border-gray-200 px-3 py-2">Kelurahan</th>
+                        <th rowspan="2" class="border border-gray-200 px-3 py-2">Agama</th>
+                        <th colspan="4" class="border border-gray-200 px-3 py-2">Tahun</th>
+                    </tr>
+                    <tr class="bg-blue-500 text-white font-semibold">
+                        <th class="border border-gray-200 px-3 py-2">2021</th>
+                        <th class="border border-gray-200 px-3 py-2">2022</th>
+                        <th class="border border-gray-200 px-3 py-2">2023</th>
+                        <th class="border border-gray-200 px-3 py-2">2024</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @php $rowIndex = 0; @endphp
+                    @foreach($data as $kecamatan => $info)
+                        @php
+                            $kelurahanList = $info['kelurahan'];
+                            $agamaList = $info['data'];
+                            $rowspanKecamatan = count($kelurahanList) * count($agamaList);
+                        @endphp
+
+                        @foreach($kelurahanList as $kIdx => $kelurahan)
+                            @foreach($agamaList as $agama => $values)
+                                <tr class="{{ $rowIndex % 2 === 0 ? 'bg-white' : 'bg-blue-50' }}">
+                                    @if($loop->parent->first && $loop->first)
+                                        <td rowspan="{{ $rowspanKecamatan }}" class="border border-gray-200 px-3 py-2 font-medium text-gray-800">
+                                            {{ $kecamatan }}
+                                        </td>
+                                    @endif
+
+                                    @if($loop->first)
+                                        <td rowspan="{{ count($agamaList) }}" class="border border-gray-200 px-3 py-2 text-gray-800">
+                                            {{ $kelurahan }}
+                                        </td>
+                                    @endif
+
+                                    <td class="border border-gray-200 px-3 py-2 text-gray-700">{{ $agama }}</td>
+                                    @foreach($values as $value)
+                                        <td class="border border-gray-200 px-3 py-2">{{ $value }}</td>
                                     @endforeach
-                                @endforeach
+                                </tr>
+                                @php $rowIndex++; @endphp
                             @endforeach
                         @endforeach
-                    </tbody>
-                </table>
-            </div>
+                    @endforeach
+                </tbody>
+            </table>
         </div>
-    </section>
+
+
+
+</section>
 </x-navbar>
