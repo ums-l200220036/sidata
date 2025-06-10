@@ -39,7 +39,7 @@ class WilayahSeeder extends Seeder
             ],
             [
                 'parent_id' => null,
-                'kecamatan' => 'Pasarkliwon', // Pastikan konsisten dengan nama di daftar OPD Anda
+                'kecamatan' => 'Pasar Kliwon', // Pastikan konsisten dengan nama di daftar OPD Anda
                 'kelurahan' => null,
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -57,7 +57,7 @@ class WilayahSeeder extends Seeder
         $banjarsariId = DB::table('wilayah')->where('kecamatan', 'Banjarsari')->whereNull('kelurahan')->first()->id;
         $jebresId = DB::table('wilayah')->where('kecamatan', 'Jebres')->whereNull('kelurahan')->first()->id;
         $laweyanId = DB::table('wilayah')->where('kecamatan', 'Laweyan')->whereNull('kelurahan')->first()->id;
-        $pasarkliwonId = DB::table('wilayah')->where('kecamatan', 'Pasarkliwon')->whereNull('kelurahan')->first()->id;
+        $pasarkliwonId = DB::table('wilayah')->where('kecamatan', 'Pasar Kliwon')->whereNull('kelurahan')->first()->id;
         $serenganId = DB::table('wilayah')->where('kecamatan', 'Serengan')->whereNull('kelurahan')->first()->id;
 
         // === SISIPKAN KELURAHAN BERDASARKAN DATA YANG DIBERIKAN ===
@@ -86,9 +86,9 @@ class WilayahSeeder extends Seeder
             [ 'parent_id' => $jebresId, 'kecamatan' => 'Jebres', 'kelurahan' => 'Kepatihan Kulon', 'created_at' => now(), 'updated_at' => now() ],
             [ 'parent_id' => $jebresId, 'kecamatan' => 'Jebres', 'kelurahan' => 'Kepatihan Wetan', 'created_at' => now(), 'updated_at' => now() ],
             [ 'parent_id' => $jebresId, 'kecamatan' => 'Jebres', 'kelurahan' => 'Mojosongo', 'created_at' => now(), 'updated_at' => now() ],
-            [ 'parent_id' => $jebresId, 'kecamatan' => 'Jebres', 'kelurahan' => 'Pucang Sawit', 'created_at' => now(), 'updated_at' => now() ],
+            [ 'parent_id' => $jebresId, 'kecamatan' => 'Jebres', 'kelurahan' => 'Pucangsawit', 'created_at' => now(), 'updated_at' => now() ],
             [ 'parent_id' => $jebresId, 'kecamatan' => 'Jebres', 'kelurahan' => 'Purwodiningratan', 'created_at' => now(), 'updated_at' => now() ],
-            [ 'parent_id' => $jebresId, 'kecamatan' => 'Jebres', 'kelurahan' => 'Sewa', 'created_at' => now(), 'updated_at' => now() ],
+            [ 'parent_id' => $jebresId, 'kecamatan' => 'Jebres', 'kelurahan' => 'Sewu', 'created_at' => now(), 'updated_at' => now() ],
             [ 'parent_id' => $jebresId, 'kecamatan' => 'Jebres', 'kelurahan' => 'Sudiroprajan', 'created_at' => now(), 'updated_at' => now() ],
             [ 'parent_id' => $jebresId, 'kecamatan' => 'Jebres', 'kelurahan' => 'Tegalharjo', 'created_at' => now(), 'updated_at' => now() ],
 
@@ -106,16 +106,16 @@ class WilayahSeeder extends Seeder
             [ 'parent_id' => $laweyanId, 'kecamatan' => 'Laweyan', 'kelurahan' => 'Sriwedari', 'created_at' => now(), 'updated_at' => now() ],
 
             // Kelurahan Pasarkliwon (10)
-            [ 'parent_id' => $pasarkliwonId, 'kecamatan' => 'Pasarkliwon', 'kelurahan' => 'Baluwarti', 'created_at' => now(), 'updated_at' => now() ],
-            [ 'parent_id' => $pasarkliwonId, 'kecamatan' => 'Pasarkliwon', 'kelurahan' => 'Gajahan', 'created_at' => now(), 'updated_at' => now() ],
-            [ 'parent_id' => $pasarkliwonId, 'kecamatan' => 'Pasarkliwon', 'kelurahan' => 'Joyosuran', 'created_at' => now(), 'updated_at' => now() ],
-            [ 'parent_id' => $pasarkliwonId, 'kecamatan' => 'Pasarkliwon', 'kelurahan' => 'Kampung Baru', 'created_at' => now(), 'updated_at' => now() ],
-            [ 'parent_id' => $pasarkliwonId, 'kecamatan' => 'Pasarkliwon', 'kelurahan' => 'Kauman', 'created_at' => now(), 'updated_at' => now() ],
-            [ 'parent_id' => $pasarkliwonId, 'kecamatan' => 'Pasarkliwon', 'kelurahan' => 'Kedung Lumbu', 'created_at' => now(), 'updated_at' => now() ],
-            [ 'parent_id' => $pasarkliwonId, 'kecamatan' => 'Pasarkliwon', 'kelurahan' => 'Mojo', 'created_at' => now(), 'updated_at' => now() ],
-            [ 'parent_id' => $pasarkliwonId, 'kecamatan' => 'Pasarkliwon', 'kelurahan' => 'Pasar Kliwon', 'created_at' => now(), 'updated_at' => now() ],
-            [ 'parent_id' => $pasarkliwonId, 'kecamatan' => 'Pasarkliwon', 'kelurahan' => 'Sang Krah', 'created_at' => now(), 'updated_at' => now() ],
-            [ 'parent_id' => $pasarkliwonId, 'kecamatan' => 'Pasarkliwon', 'kelurahan' => 'Semanggi', 'created_at' => now(), 'updated_at' => now() ],
+            [ 'parent_id' => $pasarkliwonId, 'kecamatan' => 'Pasar Kliwon', 'kelurahan' => 'Baluwarti', 'created_at' => now(), 'updated_at' => now() ],
+            [ 'parent_id' => $pasarkliwonId, 'kecamatan' => 'Pasar Kliwon', 'kelurahan' => 'Gajahan', 'created_at' => now(), 'updated_at' => now() ],
+            [ 'parent_id' => $pasarkliwonId, 'kecamatan' => 'Pasar Kliwon', 'kelurahan' => 'Joyosuran', 'created_at' => now(), 'updated_at' => now() ],
+            [ 'parent_id' => $pasarkliwonId, 'kecamatan' => 'Pasar Kliwon', 'kelurahan' => 'Kampung Baru', 'created_at' => now(), 'updated_at' => now() ],
+            [ 'parent_id' => $pasarkliwonId, 'kecamatan' => 'Pasar Kliwon', 'kelurahan' => 'Kauman', 'created_at' => now(), 'updated_at' => now() ],
+            [ 'parent_id' => $pasarkliwonId, 'kecamatan' => 'Pasar Kliwon', 'kelurahan' => 'Kedung Lumbu', 'created_at' => now(), 'updated_at' => now() ],
+            [ 'parent_id' => $pasarkliwonId, 'kecamatan' => 'Pasar Kliwon', 'kelurahan' => 'Mojo', 'created_at' => now(), 'updated_at' => now() ],
+            [ 'parent_id' => $pasarkliwonId, 'kecamatan' => 'Pasar Kliwon', 'kelurahan' => 'Pasar Kliwon', 'created_at' => now(), 'updated_at' => now() ],
+            [ 'parent_id' => $pasarkliwonId, 'kecamatan' => 'Pasar Kliwon', 'kelurahan' => 'Sangkrah', 'created_at' => now(), 'updated_at' => now() ],
+            [ 'parent_id' => $pasarkliwonId, 'kecamatan' => 'Pasar Kliwon', 'kelurahan' => 'Semanggi', 'created_at' => now(), 'updated_at' => now() ],
 
             // Kelurahan Serengan (7)
             [ 'parent_id' => $serenganId, 'kecamatan' => 'Serengan', 'kelurahan' => 'Danukusuman', 'created_at' => now(), 'updated_at' => now() ],

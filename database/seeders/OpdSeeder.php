@@ -45,7 +45,7 @@ class OpdSeeder extends Seeder
             ['nama_opd' => 'Badan Kesatuan Bangsa Dan Politik', 'created_at' => now(), 'updated_at' => now()],
             ['nama_opd' => 'Kecamatan Jebres', 'created_at' => now(), 'updated_at' => now()],
             ['nama_opd' => 'Kecamatan Laweyan', 'created_at' => now(), 'updated_at' => now()],
-            ['nama_opd' => 'Kecamatan Pasarkliwon', 'created_at' => now(), 'updated_at' => now()],
+            ['nama_opd' => 'Kecamatan Pasar Kliwon', 'created_at' => now(), 'updated_at' => now()],
             ['nama_opd' => 'Kecamatan Serengan', 'created_at' => now(), 'updated_at' => now()],
             ['nama_opd' => 'Badan Pendapatan Daerah', 'created_at' => now(), 'updated_at' => now()],
             ['nama_opd' => 'Dinas Kebudayaan Dan Pariwisata', 'created_at' => now(), 'updated_at' => now()],

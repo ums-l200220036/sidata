@@ -55,7 +55,7 @@ class UserSeeder extends Seeder
             'Kecamatan Banjarsari' => 'banjarsari', // Ini adalah nama OPD
             'Kecamatan Jebres' => 'jebres',
             'Kecamatan Laweyan' => 'laweyan',
-            'Kecamatan Pasarkliwon' => 'pasarkliwon',
+            'Kecamatan Pasar Kliwon' => 'pasarkliwon',
             'Kecamatan Serengan' => 'serengan',
 
             // Kelurahan - dari daftar 54 kelurahan
@@ -70,8 +70,8 @@ class UserSeeder extends Seeder
             // Jebres (11)
             'Gandekan' => 'gandekan', 'Jagalan' => 'jagalan', 'Jebres' => 'jebres_kel',
             'Kepatihan Kulon' => 'kepatihankulon', 'Kepatihan Wetan' => 'kepatihanwetan',
-            'Mojosongo' => 'mojosongo', 'Pucang Sawit' => 'pucangsawit',
-            'Purwodiningratan' => 'purwodiningratan', 'Sewa' => 'sewa',
+            'Mojosongo' => 'mojosongo', 'Pucangsawit' => 'pucangsawit',
+            'Purwodiningratan' => 'purwodiningratan', 'Sewu' => 'sewu',
             'Sudiroprajan' => 'sudiroprajan', 'Tegalharjo' => 'tegalharjo',
 
             // Laweyan (11)
@@ -85,7 +85,7 @@ class UserSeeder extends Seeder
             'Kampung Baru' => 'kampungbaru_kel',
             'Kauman' => 'kauman', 'Kedung Lumbu' => 'kedunglumbu',
             'Mojo' => 'mojo', 'Pasar Kliwon' => 'pasarkliwon_kel',
-            'Sang Krah' => 'sangkrah', 'Semanggi' => 'semanggi',
+            'Sangkrah' => 'sangkrah', 'Semanggi' => 'semanggi',
 
             // Serengan (7)
             'Danukusuman' => 'danukusuman', 'Jayengan' => 'jayengan', 'Joyotakan' => 'joyotakan',
@@ -127,7 +127,7 @@ class UserSeeder extends Seeder
         // === 2. Data User OPD (Non-Kecamatan) ===
         $opds = DB::table('opd')->whereNotIn('nama_opd', [
             'Kecamatan Banjarsari', 'Kecamatan Jebres', 'Kecamatan Laweyan',
-            'Kecamatan Pasarkliwon', 'Kecamatan Serengan'
+            'Kecamatan Pasar Kliwon', 'Kecamatan Serengan'
         ])->get();
 
         foreach ($opds as $opd) {
@@ -147,7 +147,7 @@ class UserSeeder extends Seeder
         // === 3. Data User OPD Kecamatan ===
         $kecamatansOpd = DB::table('opd')->whereIn('nama_opd', [
             'Kecamatan Banjarsari', 'Kecamatan Jebres', 'Kecamatan Laweyan',
-            'Kecamatan Pasarkliwon', 'Kecamatan Serengan'
+            'Kecamatan Pasar Kliwon', 'Kecamatan Serengan'
         ])->get();
 
         foreach ($kecamatansOpd as $kecamatanOpd) {
