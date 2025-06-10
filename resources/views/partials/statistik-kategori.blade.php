@@ -36,7 +36,6 @@
                 class="hidden"
                 x-model="selected"
             />
-            <i class="fa-solid fa-list text-4xl mb-3"></i>
             Kategori Data
         </label>
 
@@ -53,27 +52,21 @@
                 class="hidden"
                 x-model="selected"
             />
-            <i class="fa-solid fa-city text-4xl mb-3"></i>
             Data Seluruh Kota
         </label>
     @elseif ($role === 'opd')
         {{-- OPD hanya bisa akses data sesuai opd --}}
-        <label
-            :class="selected === 'data_opd' ? 'bg-[#FE482B] text-white' : 'bg-white text-[#FE482B] border border-[#FE482B]'"
-            class="cursor-pointer rounded-lg p-6 shadow-md flex flex-col justify-center items-center font-semibold transition duration-300 ease-in-out"
-            for="data_opd"
-        >
-            <input
-                type="radio"
-                id="data_opd"
-                name="kategori"
-                value="data_opd"
-                class="hidden"
-                x-model="selected"
-            />
-            <i class="fa-solid fa-database text-4xl mb-3"></i>
-            Data OPD
-        </label>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {{-- @foreach ($kategoriList as $kategori) --}}
+                <a 
+                    href=""
+                    :class="selected === '' ? 'bg-[#FE482B] text-white' : 'bg-white text-[#FE482B] border border-[#FE482B]'"
+                    class="cursor-pointer rounded-lg p-6 shadow-md flex flex-col justify-center items-center font-semibold transition duration-300 ease-in-out"
+                >
+                    {{-- {{ $kategori->name }} --}}
+                </a>
+            {{-- @endforeach --}}
+        </div>        
     @elseif ($role === 'kecamatan')
         {{-- Kelurahan hanya data kelurahan --}}
         <label
@@ -89,7 +82,6 @@
                 class="hidden"
                 x-model="selected"
             />
-            <i class="fa-solid fa-house text-4xl mb-3"></i>
             Data Kecamatan
         </label>
     @elseif ($role === 'kelurahan')
@@ -107,8 +99,7 @@
                 class="hidden"
                 x-model="selected"
             />
-            <i class="fa-solid fa-house text-4xl mb-3"></i>
-            Data Kelurahan
+                Data Kelurahan
         </label>
     @else
         {{-- Guest / lain-lain --}}
