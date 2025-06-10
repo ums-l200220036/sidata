@@ -2,7 +2,6 @@
 
 @section('title', 'Kelola Pengguna')
 
-{{-- Pastikan ini adalah tempat yang tepat untuk section content di layout Anda --}}
 @section('content')
 <x-navbar>
     <div class="bg-white rounded-xl" x-data="

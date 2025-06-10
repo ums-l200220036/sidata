@@ -5,6 +5,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DataSektoralImportController;
+use App\Http\Controllers\AdminIndikatorController;
 
 Route::get('/', function () {
     return view('home');
@@ -23,6 +24,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/users', [AdminController::class, 'store'])->name('users.store');
         Route::put('/users/{user}', [AdminController::class, 'update'])->name('users.update');
         Route::delete('/users/{user}', [AdminController::class, 'destroy'])->name('users.destroy');
+        
+        Route::get('/indikator', [AdminIndikatorController::class, 'index'])->name('indikator.index');
+        Route::post('/indikator', [AdminIndikatorController::class, 'store'])->name('indikator.store');
+        Route::put('/indikator/{indikator}', [AdminIndikatorController::class, 'update'])->name('indikator.update');
+        Route::delete('/indikator/{indikator}', [AdminIndikatorController::class, 'destroy'])->name('indikator.destroy');
     });
 
     Route::middleware(['auth', 'role:opd'])->group(function () {
@@ -36,7 +42,3 @@ require __DIR__.'/auth.php';
 Route::get('/tentang', function () {
     return view('tentang');
 })->name('tentang');
-
-Route::get('/kelolakategori', function () {
-    return view('admin/kelolakategori');
-})->name('kelolakategori');

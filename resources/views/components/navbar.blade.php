@@ -75,9 +75,9 @@
                     </a>
                 </li>
                 <li>
-                    <a href="/data-kategori"
+                    <a href="{{ route('indikator.index') }}"
                        class="{{ request()->is('data-kategori') ? 'text-black pb-1 border-b-2 border-[#FE482B]' : 'text-black' }} transition">
-                        Kategori
+                        Kelola Indikator
                     </a>
                 </li>
             @endif

@@ -12,4 +12,9 @@ class Indikator extends Model
         'opd_id',
         'nama_indikator',
     ];
+
+    public function opd()
+    {
+        return $this->belongsTo(Opd::class);
+    }
 }
