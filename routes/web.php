@@ -54,17 +54,6 @@ Route::get('/tentang', function () {
     return view('tentang');
 })->name('tentang');
 
-Route::get('/tabel', function () {
-    return view('tabelbackup');
-})->name('tentang');
-
-Route::get('/datasektoral-kecamatan', function () {
-    return view('tabel-kecamatan');
-})->name('tabel.kecamatan');
-
-Route::get('/datasektoral-kelurahan', function () {
-    return view('tabel-kelurahan');
-})->name('tabel.kelurahan');
 
 Route::get('/data/gender/{indikatorId}/{tahun?}/{kecamatanId?}/{kelurahanId?}', [DataSektoralController::class, 'showPendidikanByGender'])
     ->middleware('auth')
@@ -81,3 +70,12 @@ Route::get('/data/agama/{indikatorId}/{tahun?}/{kecamatanId?}/{kelurahanId?}', [
 Route::get('/laporan/prioritas/{indikatorId}/{tahun?}/{kecamatanId?}/{kelurahanId?}', [DataSektoralController::class, 'showPrioritasReport'])
     ->middleware('auth')
     ->name('laporan.prioritas');
+
+Route::get('/tabel-publik', function () {
+    return view('tabel-publik');
+})->name('tabel.publik');
+
+Route::get('/daftar-opd', function () {
+    return view('daftar-opd');
+})->name('daftar.opd');
+
