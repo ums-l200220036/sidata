@@ -57,18 +57,13 @@
     @elseif ($role === 'opd')
 <div class="grid w-full bg-white grid-cols-1 md:grid-cols-4 gap-4">
     @foreach ($indikators as $indikator)
-        {{-- 
-            PERBAIKAN DI SINI:
-            Kita memanggil $indikator->route_name untuk mendapatkan nama route secara dinamis.
-            Laravel secara otomatis akan memanggil fungsi getRouteNameAttribute() yang baru kita buat.
-        --}}
-        <a
-            href="{{ route($indikator->route_name, ['indikatorId' => $indikator->id]) }}"
-            :class="selected === '' ? 'bg-[#FE482B] text-white' : 'bg-white text-[#FE482B] border border-[#FE482B]'"
-            class="cursor-pointer rounded-lg p-6 shadow-md flex flex-col justify-center items-center font-semibold transition duration-300 ease-in-out"
-        >
-            {{ $indikator->nama_indikator }}
-        </a>
+    <a
+        href="{{ route($indikator->route_name, ['indikatorId' => $indikator->id]) }}"
+        :class="selected === '' ? 'bg-[#FE482B] text-white' : 'bg-white text-[#FE482B] border border-[#FE482B]'"
+        class="cursor-pointer rounded-md p-3 shadow-sm flex flex-col justify-center items-center font-medium text-sm transition duration-300 ease-in-out"
+    >
+        {{ $indikator->nama_indikator }}
+    </a>
     @endforeach
 </div>
     @elseif ($role === 'kecamatan')

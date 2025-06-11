@@ -5,28 +5,28 @@
 <x-navbar>
 <section class="min-h-screen overflow-y-auto bg-white p-4">
     <div class="container mx-auto px-4 py-6">
-        <h2 class="text-lg font-bold mb-4 text-center">
+        <h2 class="text-3xl font-bold text-gray-800 flex items-center gap-3">
             {{ $indikatorTitle }}
         </h2>
 
         {{-- FORM FILTER DINAMIS --}}
-        <div class="flex justify-center mb-6">
-            <form id="filter-form" class="flex flex-wrap items-center justify-center gap-4 bg-gray-50 p-3 rounded-lg border">
+        <div class="flex">
+            <form id="filter-form" class="flex flex-wrap items-center justify-center gap-6 py-2">
                 {{-- Filter Tahun --}}
-                <div class="flex items-center gap-2">
-                    <label for="year-select" class="font-semibold text-gray-700">Tahun:</label>
-                    <select name="year" id="year-select" class="border border-gray-300 rounded-md p-2 focus:ring-blue-500 focus:border-blue-500">
+                <div class="flex items-center gap-2 p-4 bg-white transition duration-200 ease-in-out">
+                    <label for="year-select" class="font-semibold text-gray-700 text-sm">Tahun:</label>
+                    <select name="year" id="year-select" class="block w-full min-w-[120px] border border-gray-300 rounded-lg py-2 px-3 text-sm text-gray-800 leading-tight focus:outline-none focus:ring-2 focus:ring-[#FE482B] focus:border-transparent transition duration-200 ease-in-out cursor-pointer appearance-none bg-white pr-8">
                         @foreach($availableYears as $year)
                             <option value="{{ $year }}" {{ $year == $tahunAnalisis ? 'selected' : '' }}>{{ $year }}</option>
                         @endforeach
                     </select>
                 </div>
-
+        
                 {{-- Filter Kecamatan (Hanya untuk OPD) --}}
                 @if(Auth::check() && Auth::user()->role === 'opd')
-                <div class="flex items-center gap-2">
-                    <label for="kecamatan-select" class="font-semibold text-gray-700">Kecamatan:</label>
-                    <select name="kecamatan" id="kecamatan-select" class="border border-gray-300 rounded-md p-2">
+                <div class="flex items-center gap-2 p-4 bg-white transition duration-200 ease-in-out">
+                    <label for="kecamatan-select" class="font-semibold text-gray-700 text-sm">Kecamatan:</label>
+                    <select name="kecamatan" id="kecamatan-select" class="block w-full min-w-[180px] border border-gray-300 rounded-lg py-2 px-3 text-sm text-gray-800 leading-tight focus:outline-none focus:ring-2 focus:ring-[#FE482B] focus:border-transparent transition duration-200 ease-in-out cursor-pointer appearance-none bg-white pr-8">
                         <option value="0">Semua Kecamatan</option>
                         @foreach($kecamatans as $kecamatan)
                             <option value="{{ $kecamatan->id }}" {{ $kecamatan->id == $selectedKecamatanId ? 'selected' : '' }}>
@@ -39,9 +39,9 @@
                 
                 {{-- Filter Kelurahan (Hanya untuk OPD dan Kecamatan) --}}
                 @if(Auth::check() && in_array(Auth::user()->role, ['opd', 'kecamatan']))
-                <div class="flex items-center gap-2">
-                    <label for="kelurahan-select" class="font-semibold text-gray-700">Kelurahan:</label>
-                    <select name="kelurahan" id="kelurahan-select" class="border border-gray-300 rounded-md p-2">
+                <div class="flex items-center gap-2 p-4 bg-white transition duration-200 ease-in-out">
+                    <label for="kelurahan-select" class="font-semibold text-gray-700 text-sm">Kelurahan:</label>
+                    <select name="kelurahan" id="kelurahan-select" class="block w-full min-w-[180px] border border-gray-300 rounded-lg py-2 px-3 text-sm text-gray-800 leading-tight focus:outline-none focus:ring-2 focus:ring-[#FE482B] focus:border-transparent transition duration-200 ease-in-out cursor-pointer appearance-none bg-white pr-8">
                         <option value="0">Semua Kelurahan</option>
                         @foreach($kelurahans as $kelurahan)
                             <option value="{{ $kelurahan->id }}" {{ $kelurahan->id == $selectedKelurahanId ? 'selected' : '' }}>
@@ -54,30 +54,31 @@
             </form>
         </div>
 
+
         {{-- TABEL DATA ADAPTIF --}}
-        <div class="overflow-x-auto flex justify-center">
-           <table class="min-w-full border border-gray-200 text-sm text-center rounded-lg overflow-hidden">
-                <thead class="bg-blue-200 text-blue-900 font-semibold">
+        <div class="overflow-x-auto flex justify-center shadow-lg">
+           <table class="min-w-full border-collapse border border-gray-200 text-sm text-center  overflow-hidden">
+                <thead class="bg-[#FE482B] text-white">
                     <tr>
                         {{-- Header Kolom Adaptif Sesuai Peran --}}
                         @if(Auth::check() && Auth::user()->role === 'opd')
-                            <th rowspan="2" class="border border-gray-200 px-3 py-2">Kecamatan</th>
-                            <th rowspan="2" class="border border-gray-200 px-3 py-2">Kelurahan</th>
+                            <th rowspan="2" class="border border-gray-200 px-4 py-3 font-semibold">Kecamatan</th>
+                            <th rowspan="2" class="border border-gray-200 px-4 py-3 font-semibold">Kelurahan</th>
                         @elseif(Auth::check() && Auth::user()->role === 'kecamatan')
-                            <th rowspan="2" class="border border-gray-200 px-3 py-2">Kelurahan</th>
+                            <th rowspan="2" class="border border-gray-200 px-4 py-3 font-semibold">Kelurahan</th>
                         @endif
                         
                         {{-- Ganti 'Pendidikan' ini sesuai kebutuhan (Pekerjaan, Agama, dll) --}}
-                        <th rowspan="2" class="border border-gray-200 px-3 py-2">Pendidikan</th>
-                        <th colspan="2" class="border border-gray-200 px-3 py-2">Laki-laki</th>
-                        <th colspan="2" class="border border-gray-200 px-3 py-2">Perempuan</th>
-                        <th rowspan="2" class="border border-gray-200 px-3 py-2">Jumlah</th>
+                        <th rowspan="2" class="border border-gray-200 px-4 py-3 font-semibold">Pendidikan</th>
+                        <th colspan="2" class="border border-gray-200 px-4 py-3 font-semibold">Laki-laki</th>
+                        <th colspan="2" class="border border-gray-200 px-4 py-3 font-semibold">Perempuan</th>
+                        <th rowspan="2" class="border border-gray-200 px-4 py-3 font-semibold">Jumlah</th>
                     </tr>
-                    <tr class="bg-blue-500 text-white">
-                        <th class="border border-gray-200 px-3 py-2">n</th>
-                        <th class="border border-gray-200 px-3 py-2">%</th>
-                        <th class="border border-gray-200 px-3 py-2">n</th>
-                        <th class="border border-gray-200 px-3 py-2">%</th>
+                    <tr class="bg-[#e03d25] text-white"> {{-- Slightly darker red for sub-header --}}
+                        <th class="border border-gray-200 px-4 py-2">n</th>
+                        <th class="border border-gray-200 px-4 py-2">%</th>
+                        <th class="border border-gray-200 px-4 py-2">n</th>
+                        <th class="border border-gray-200 px-4 py-2">%</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -88,24 +89,24 @@
                         @foreach ($kecamatanInfo['kelurahan'] as $kelurahanName => $kelurahanInfo)
                             {{-- Ganti 'pendidikan' ini sesuai kebutuhan (pekerjaan, agama, dll) --}}
                             @foreach ($kelurahanInfo['pendidikan'] as $pendidikanName => $values)
-                                <tr class="{{ $loop->parent->parent->iteration % 2 === 0 ? 'bg-white' : 'bg-blue-50' }}">
+                                <tr class="{{ $loop->parent->parent->iteration % 2 === 0 ? 'bg-white' : 'bg-gray-50' }} hover:bg-gray-100 transition duration-150 ease-in-out">
                                     
                                     {{-- Kolom Data Adaptif Sesuai Peran --}}
                                     @if(Auth::check() && Auth::user()->role === 'opd')
-                                        @if ($currentKecamatan !== $kecamatanName)<td rowspan="{{ $kecamatanInfo['rowspan'] }}" class="border border-gray-200 px-3 py-2 font-bold align-middle text-center">{{ $kecamatanName }}</td>@php $currentKecamatan = $kecamatanName; @endphp @endif
+                                        @if ($currentKecamatan !== $kecamatanName)<td rowspan="{{ $kecamatanInfo['rowspan'] }}" class="border border-gray-200 px-4 py-2 font-bold align-middle text-center">{{ $kecamatanName }}</td>@php $currentKecamatan = $kecamatanName; @endphp @endif
                                     @endif
                                     @if(Auth::check() && in_array(Auth::user()->role, ['opd', 'kecamatan']))
-                                        @if ($currentKelurahan !== $kelurahanName)<td rowspan="{{ $kelurahanInfo['rowspan'] }}" class="border border-gray-200 px-3 py-2 font-medium align-middle text-center">{{ $kelurahanName }}</td>@php $currentKelurahan = $kelurahanName; @endphp @endif
+                                        @if ($currentKelurahan !== $kelurahanName)<td rowspan="{{ $kelurahanInfo['rowspan'] }}" class="border border-gray-200 px-4 py-2 font-medium align-middle text-center">{{ $kelurahanName }}</td>@php $currentKelurahan = $kelurahanName; @endphp @endif
                                     @endif
 
                                     {{-- Ganti '$pendidikanName' ini sesuai kebutuhan ($pekerjaanName, $agamaName, dll) --}}
-                                    <td class="border border-gray-200 px-3 py-2 text-left">{{ $pendidikanName }}</td>
+                                    <td class="border border-gray-200 px-4 py-2 text-left">{{ $pendidikanName }}</td>
                                     
-                                    <td class="border border-gray-200 px-3 py-2">{{ number_format($values['laki_n'], 0, ',', '.') }}</td>
-                                    <td class="border border-gray-200 px-3 py-2">{{ number_format($values['laki_pct'], 2, ',', '.') }}%</td>
-                                    <td class="border border-gray-200 px-3 py-2">{{ number_format($values['perempuan_n'], 0, ',', '.') }}</td>
-                                    <td class="border border-gray-200 px-3 py-2">{{ number_format($values['perempuan_pct'], 2, ',', '.') }}%</td>
-                                    <td class="border border-gray-200 px-3 py-2 font-semibold">{{ number_format($values['jumlah'], 0, ',', '.') }}</td>
+                                    <td class="border border-gray-200 px-4 py-2">{{ number_format($values['laki_n'], 0, ',', '.') }}</td>
+                                    <td class="border border-gray-200 px-4 py-2">{{ number_format($values['laki_pct'], 2, ',', '.') }}%</td>
+                                    <td class="border border-gray-200 px-4 py-2">{{ number_format($values['perempuan_n'], 0, ',', '.') }}</td>
+                                    <td class="border border-gray-200 px-4 py-2">{{ number_format($values['perempuan_pct'], 2, ',', '.') }}%</td>
+                                    <td class="border border-gray-200 px-4 py-2 font-semibold">{{ number_format($values['jumlah'], 0, ',', '.') }}</td>
                                 </tr>
                             @endforeach
                             @php $currentKelurahan = null; @endphp
@@ -117,7 +118,7 @@
                             if (Auth::check() && in_array(Auth::user()->role, ['opd', 'kecamatan'])) $colspan++;
                             if (Auth::check() && Auth::user()->role === 'opd') $colspan++;
                         @endphp
-                        <tr><td colspan="{{ $colspan }}" class="border border-gray-200 px-3 py-2 text-center text-gray-500">Tidak ada data yang tersedia untuk filter yang dipilih.</td></tr>
+                        <tr><td colspan="{{ $colspan }}" class="border border-gray-200 px-4 py-4 text-center text-gray-500">Tidak ada data yang tersedia untuk filter yang dipilih.</td></tr>
                     @endforelse
                 </tbody>
             </table>

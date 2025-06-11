@@ -111,9 +111,16 @@
 
         <div class="bg-white rounded-xl p-6">
             <div class="flex items-center justify-between mb-6">
-                <h2 class="text-2xl font-semibold text-gray-800 flex items-center gap-2">
-                    Kelola Pengguna
+                <h2 class="text-3xl font-bold text-gray-800 flex items-center gap-3">
+                    <i class="fas fa-users text-[#FE482B]"></i>Kelola Pengguna
                 </h2>
+            </div>
+            <div class="flex items-center justify-between mb-6">
+                 {{-- Input Pencarian --}}
+                <div class="w-1/3">
+                    <input type="text" x-model="searchTerm" placeholder="Cari pengguna berdasarkan nama..."
+                        class=" w-full px-4 py-2 border rounded focus:ring-[#FE482B] focus:border-[#FE482B] shadow-sm">
+                </div>
                 <button @click="showModal = true; newUserData.role = ''; newUserData.opd_id = ''; newUserData.wilayah_id = ''; filterDropdowns('');"
                     class="flex items-center gap-2 bg-[#FE482B] hover:bg-orange-600 text-white px-4 py-2 rounded-md shadow transition">
                     <i class="fas fa-user-plus"></i>
@@ -121,11 +128,7 @@
                 </button>
             </div>
 
-            {{-- Input Pencarian --}}
-            <div class="mb-4">
-                <input type="text" x-model="searchTerm" placeholder="Cari pengguna berdasarkan nama..."
-                    class="w-3/12 px-4 py-2 border rounded focus:ring-[#FE482B] focus:border-[#FE482B] shadow-sm">
-            </div>
+           
             {{-- End Input Pencarian --}}
 
             {{-- Notifikasi Sukses/Error --}}
@@ -146,10 +149,10 @@
             @endif
 
 
-            <div class="overflow-x-auto rounded-lg shadow-inner">
+            <div class="overflow-x-auto shadow-inner">
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-[#FE482B] text-white text-sm uppercase">
-                        <tr>
+                        <tr class="textcenter">
                             <th class="px-6 py-3 text-left tracking-wider">No</th>
                             <th class="px-6 py-3 text-left tracking-wider">Nama</th>
                             <th class="px-6 py-3 text-left tracking-wider">Email</th>
@@ -161,7 +164,7 @@
                     <tbody class="bg-white divide-y divide-gray-100 text-sm text-gray-700">
                         {{-- Menggunakan x-for untuk iterasi data yang sudah difilter oleh Alpine.js --}}
                         <template x-for="(user, index) in filteredUsers" :key="user.id">
-                        <tr class="hover:bg-gray-50 transition">
+                        <tr class="hover:bg-gray-100 transition">
                             <td class="px-6 py-4" x-text="index + 1"></td>
                             <td class="px-6 py-4 font-medium" x-text="user.name"></td>
                             <td class="px-6 py-4" x-text="user.email"></td>
