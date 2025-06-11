@@ -153,19 +153,19 @@
                     <div class="mb-4">
                         <label for="nama_indikator_add" class="block text-sm font-medium text-gray-700 mb-1.5">Nama Indikator</label>
                         <input type="text" id="nama_indikator_add" name="nama_indikator" x-model="newIndikatorData.nama_indikator" required
-                            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-[#FE482B] focus:border-[#FE482B] shadow-sm transition @error('nama_indikator') border-red-500 @enderror">
+                            class="w-full px-4 py-2.5 rounded-lg focus:ring-[#FE482B] focus:border-[#FE482B] shadow-sm transition @error('nama_indikator') border-red-500 @enderror">
                         @error('nama_indikator')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
                     </div>
                     <div class="mb-4">
                         <label for="dimensi_label_add" class="block text-sm font-medium text-gray-700 mb-1.5">Label Dimensi</label>
                         <input type="text" id="dimensi_label_add" name="dimensi_label" x-model="newIndikatorData.dimensi_label" required
-                            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-[#FE482B] focus:border-[#FE482B] shadow-sm transition @error('dimensi_label') border-red-500 @enderror">
+                            class="w-full px-4 py-2.5 rounded-lg focus:ring-[#FE482B] focus:border-[#FE482B] shadow-sm transition @error('dimensi_label') border-red-500 @enderror">
                         @error('dimensi_label')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
                     </div>
                     <div class="mb-4">
                         <label for="opd_id_add" class="block text-sm font-medium text-gray-700 mb-1.5">OPD</label>
                         <select id="opd_id_add" name="opd_id" x-model="newIndikatorData.opd_id" required
-                            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-[#FE482B] focus:border-[#FE482B] shadow-sm transition @error('opd_id') border-red-500 @enderror">
+                            class="w-full px-4 py-2.5 rounded-lg focus:ring-[#FE482B] focus:border-[#FE482B] shadow-sm transition @error('opd_id') border-red-500 @enderror">
                             <option value="" disabled>-- Pilih OPD --</option>
                             <template x-for="opd in opds" :key="opd.id">
                                 <option :value="opd.id" x-text="opd.nama_opd"></option>
@@ -208,19 +208,19 @@
                     <div class="mb-4">
                         <label for="nama_indikator_edit" class="block text-sm font-medium text-gray-700 mb-1.5">Nama Indikator</label>
                         <input type="text" id="nama_indikator_edit" name="nama_indikator" x-model="editIndikator.nama_indikator" required
-                            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-[#FE482B] focus:border-[#FE482B] shadow-sm transition @error('nama_indikator') border-red-500 @enderror">
+                            class="w-full px-4 py-2.5 rounded-lg focus:ring-[#FE482B] focus:border-[#FE482B] shadow-sm transition @error('nama_indikator') border-red-500 @enderror">
                         @error('nama_indikator')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
                     </div>
                     <div class="mb-4">
                         <label for="dimensi_label_edit" class="block text-sm font-medium text-gray-700 mb-1.5">Label Dimensi</label>
                         <input type="text" id="dimensi_label_edit" name="dimensi_label" x-model="editIndikator.dimensi_label" required
-                            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-[#FE482B] focus:border-[#FE482B] shadow-sm transition @error('dimensi_label') border-red-500 @enderror">
+                            class="w-full px-4 py-2.5 rounded-lg focus:ring-[#FE482B] focus:border-[#FE482B] shadow-sm transition @error('dimensi_label') border-red-500 @enderror">
                         @error('dimensi_label')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
                     </div>
                     <div class="mb-4">
                         <label for="opd_id_edit" class="block text-sm font-medium text-gray-700 mb-1.5">OPD</label>
                         <select id="opd_id_edit" name="opd_id" x-model="editIndikator.opd_id" required
-                            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-[#FE482B] focus:border-[#FE482B] shadow-sm transition @error('opd_id') border-red-500 @enderror">
+                            class="w-full px-4 py-2.5 rounded-lg focus:ring-[#FE482B] focus:border-[#FE482B] shadow-sm transition @error('opd_id') border-red-500 @enderror">
                             <option value="" disabled>-- Pilih OPD --</option>
                             <template x-for="opd in opds" :key="opd.id">
                                 <option :value="opd.id" x-text="opd.nama_opd"></option>
