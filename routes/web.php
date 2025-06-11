@@ -56,4 +56,14 @@ Route::get('/datasektoral-kelurahan', function () {
     return view('tabel-kelurahan');
 })->name('tabel.kelurahan');
 
-Route::get('/data-sektoral/{indikatorId}', [DataSektoralController::class, 'showIndicatorData'])->name('data.sektoral.by_indicator');
+Route::get('/data/gender/{indikatorId}/{tahun?}/{kecamatanId?}/{kelurahanId?}', [DataSektoralController::class, 'showPendidikanByGender'])
+    ->middleware('auth')
+    ->name('data.gender');
+
+Route::get('/data/pekerjaan/{indikatorId}/{tahun?}/{kecamatanId?}/{kelurahanId?}', [DataSektoralController::class, 'showPekerjaanByGender'])
+    ->middleware('auth')
+    ->name('data.pekerjaan.gender');
+
+Route::get('/data/agama/{indikatorId}/{tahun?}/{kecamatanId?}/{kelurahanId?}', [DataSektoralController::class, 'showAgamaByGender'])
+    ->middleware('auth')
+    ->name('data.agama.gender');

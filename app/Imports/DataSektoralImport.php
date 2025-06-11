@@ -27,7 +27,8 @@ class DataSektoralImport implements ToCollection
     {
         $lastValue = null;
         foreach ($row as $index => $value) {
-            $trimmed = trim((string)$value);
+            $cleanedValue = str_replace(html_entity_decode('&nbsp;'), '', (string)$value);
+            $trimmed = trim($cleanedValue);
             if ($trimmed !== '') {
                 $lastValue = $trimmed;
                 $row[$index] = $lastValue;
