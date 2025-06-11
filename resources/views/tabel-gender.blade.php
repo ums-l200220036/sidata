@@ -5,11 +5,9 @@
 <x-navbar>
 <section class="min-h-screen overflow-y-auto bg-white p-4">
     <div class="container mx-auto px-4 py-6">
-        <h2 class="text-3xl font-bold text-gray-800 flex items-center gap-3">
-            {{ $indikatorTitle }}
-        </h2>
+        <h2 class="text-3xl font-bold text-gray-800 flex items-center gap-3">{{ $indikatorTitle }}</h2>
 
-        {{-- FORM FILTER DINAMIS --}}
+        {{-- Form Filter --}}
         <div class="flex">
             <form id="filter-form" class="flex flex-wrap items-center justify-center gap-6 py-2">
                 {{-- Filter Tahun --}}
@@ -54,66 +52,62 @@
             </form>
         </div>
 
-
-        {{-- TABEL DATA ADAPTIF --}}
+        {{-- Tabel Data --}}
         <div class="overflow-x-auto flex justify-center shadow-lg">
-           <table class="min-w-full border-collapse border border-gray-200 text-sm text-center  overflow-hidden">
+           <table class="min-w-full border-collapse border border-gray-200 text-sm text-center overflow-hidden">
                 <thead class="bg-[#FE482B] text-white">
                     <tr>
-                        {{-- Header Kolom Adaptif Sesuai Peran --}}
                         @if(Auth::check() && Auth::user()->role === 'opd')
-                            <th rowspan="2" class="border border-gray-200 px-4 py-3 font-semibold">Kecamatan</th>
-                            <th rowspan="2" class="border border-gray-200 px-4 py-3 font-semibold">Kelurahan</th>
+                            <th rowspan="2" class="border ...">Kecamatan</th>
+                            <th rowspan="2" class="border ...">Kelurahan</th>
                         @elseif(Auth::check() && Auth::user()->role === 'kecamatan')
-                            <th rowspan="2" class="border border-gray-200 px-4 py-3 font-semibold">Kelurahan</th>
+                            <th rowspan="2" class="border ...">Kelurahan</th>
                         @endif
                         
-                        {{-- Ganti 'Pendidikan' ini sesuai kebutuhan (Pekerjaan, Agama, dll) --}}
-                        <th rowspan="2" class="border border-gray-200 px-4 py-3 font-semibold">Pendidikan</th>
-                        <th colspan="2" class="border border-gray-200 px-4 py-3 font-semibold">Laki-laki</th>
-                        <th colspan="2" class="border border-gray-200 px-4 py-3 font-semibold">Perempuan</th>
-                        <th rowspan="2" class="border border-gray-200 px-4 py-3 font-semibold">Jumlah</th>
+                        {{-- Header Kolom Dimensi menjadi dinamis --}}
+                        <th rowspan="2" class="border border-gray-200 px-4 py-3 font-semibold">{{ $dimensiHeader }}</th>
+                        
+                        <th colspan="2" class="border ...">Laki-laki</th>
+                        <th colspan="2" class="border ...">Perempuan</th>
+                        <th rowspan="2" class="border ...">Jumlah</th>
                     </tr>
-                    <tr class="bg-[#e03d25] text-white"> {{-- Slightly darker red for sub-header --}}
-                        <th class="border border-gray-200 px-4 py-2">n</th>
-                        <th class="border border-gray-200 px-4 py-2">%</th>
-                        <th class="border border-gray-200 px-4 py-2">n</th>
-                        <th class="border border-gray-200 px-4 py-2">%</th>
+                    <tr class="bg-[#e03d25] text-white">
+                        <th class="border ...">n</th><th class="border ...">%</th><th class="border ...">n</th><th class="border ...">%</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @php
-                        $currentKecamatan = null; $currentKelurahan = null;
-                    @endphp
+                    @php $currentKecamatan = null; $currentKelurahan = null; @endphp
                     @forelse ($structuredData as $kecamatanName => $kecamatanInfo)
                         @foreach ($kecamatanInfo['kelurahan'] as $kelurahanName => $kelurahanInfo)
-                            {{-- Ganti 'pendidikan' ini sesuai kebutuhan (pekerjaan, agama, dll) --}}
-                            @foreach ($kelurahanInfo['pendidikan'] as $pendidikanName => $values)
-                                <tr class="{{ $loop->parent->parent->iteration % 2 === 0 ? 'bg-white' : 'bg-gray-50' }} hover:bg-gray-100 transition duration-150 ease-in-out">
-                                    
-                                    {{-- Kolom Data Adaptif Sesuai Peran --}}
+                            
+                            {{-- PERUBAHAN UTAMA DI SINI --}}
+                            {{-- Loop menggunakan $dimensionKey yang dikirim dari controller --}}
+                            @foreach ($kelurahanInfo[$dimensionKey] as $dimensiName => $values)
+                                <tr class="{{ $loop->parent->parent->iteration % 2 === 0 ? 'bg-white' : 'bg-gray-50' }} hover:bg-gray-100 ...">
+                                    {{-- Kolom adaptif Kecamatan & Kelurahan (tidak berubah) --}}
                                     @if(Auth::check() && Auth::user()->role === 'opd')
-                                        @if ($currentKecamatan !== $kecamatanName)<td rowspan="{{ $kecamatanInfo['rowspan'] }}" class="border border-gray-200 px-4 py-2 font-bold align-middle text-center">{{ $kecamatanName }}</td>@php $currentKecamatan = $kecamatanName; @endphp @endif
+                                        @if ($currentKecamatan !== $kecamatanName)<td rowspan="{{ $kecamatanInfo['rowspan'] }}" class="border ...">{{ $kecamatanName }}</td>@php $currentKecamatan = $kecamatanName; @endphp @endif
                                     @endif
                                     @if(Auth::check() && in_array(Auth::user()->role, ['opd', 'kecamatan']))
-                                        @if ($currentKelurahan !== $kelurahanName)<td rowspan="{{ $kelurahanInfo['rowspan'] }}" class="border border-gray-200 px-4 py-2 font-medium align-middle text-center">{{ $kelurahanName }}</td>@php $currentKelurahan = $kelurahanName; @endphp @endif
+                                        @if ($currentKelurahan !== $kelurahanName)<td rowspan="{{ $kelurahanInfo['rowspan'] }}" class="border ...">{{ $kelurahanName }}</td>@php $currentKelurahan = $kelurahanName; @endphp @endif
                                     @endif
 
-                                    {{-- Ganti '$pendidikanName' ini sesuai kebutuhan ($pekerjaanName, $agamaName, dll) --}}
-                                    <td class="border border-gray-200 px-4 py-2 text-left">{{ $pendidikanName }}</td>
+                                    {{-- Variabel $dimensiName menjadi generik --}}
+                                    <td class="border border-gray-200 px-4 py-2 text-left">{{ $dimensiName }}</td>
                                     
-                                    <td class="border border-gray-200 px-4 py-2">{{ number_format($values['laki_n'], 0, ',', '.') }}</td>
-                                    <td class="border border-gray-200 px-4 py-2">{{ number_format($values['laki_pct'], 2, ',', '.') }}%</td>
-                                    <td class="border border-gray-200 px-4 py-2">{{ number_format($values['perempuan_n'], 0, ',', '.') }}</td>
-                                    <td class="border border-gray-200 px-4 py-2">{{ number_format($values['perempuan_pct'], 2, ',', '.') }}%</td>
-                                    <td class="border border-gray-200 px-4 py-2 font-semibold">{{ number_format($values['jumlah'], 0, ',', '.') }}</td>
+                                    {{-- Kolom nilai (tidak berubah) --}}
+                                    <td class="border ...">{{ number_format($values['laki_n'], 0, ',', '.') }}</td>
+                                    <td class="border ...">{{ number_format($values['laki_pct'], 2, ',', '.') }}%</td>
+                                    <td class="border ...">{{ number_format($values['perempuan_n'], 0, ',', '.') }}</td>
+                                    <td class="border ...">{{ number_format($values['perempuan_pct'], 2, ',', '.') }}%</td>
+                                    <td class="border ... font-semibold">{{ number_format($values['jumlah'], 0, ',', '.') }}</td>
                                 </tr>
                             @endforeach
                             @php $currentKelurahan = null; @endphp
                         @endforeach
                         @php $currentKecamatan = null; @endphp
                     @empty
-                        @php
+                       @php
                             $colspan = 6;
                             if (Auth::check() && in_array(Auth::user()->role, ['opd', 'kecamatan'])) $colspan++;
                             if (Auth::check() && Auth::user()->role === 'opd') $colspan++;
@@ -126,7 +120,7 @@
     </div>
 </section>
 
-{{-- SCRIPT FILTER DINAMIS (TIDAK PERLU DIUBAH) --}}
+{{-- Script Filter (Tidak ada perubahan) --}}
 <script>
     document.getElementById('filter-form').addEventListener('change', function(e) {
         const tahun = document.getElementById('year-select').value;

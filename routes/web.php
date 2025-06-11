@@ -4,12 +4,22 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
+use App\Models\DataSektoral;
+use App\Models\Indikator;
 use App\Http\Controllers\DataSektoralImportController;
 use App\Http\Controllers\AdminIndikatorController;
 use App\Http\Controllers\DataSektoralController;
 
 Route::get('/', function () {
-    return view('home');
+    // 1. Hitung data langsung di dalam fungsi route
+    $totalDataset = DataSektoral::count();
+    $totalKategori = Indikator::count();
+
+    // 2. Kirim data tersebut ke view 'home'
+    return view('home', [
+        'totalDataset' => $totalDataset,
+        'totalKategori' => $totalKategori,
+    ]);
 });
 
 
@@ -67,3 +77,7 @@ Route::get('/data/pekerjaan/{indikatorId}/{tahun?}/{kecamatanId?}/{kelurahanId?}
 Route::get('/data/agama/{indikatorId}/{tahun?}/{kecamatanId?}/{kelurahanId?}', [DataSektoralController::class, 'showAgamaByGender'])
     ->middleware('auth')
     ->name('data.agama.gender');
+
+Route::get('/laporan/prioritas/{indikatorId}/{tahun?}/{kecamatanId?}/{kelurahanId?}', [DataSektoralController::class, 'showPrioritasReport'])
+    ->middleware('auth')
+    ->name('laporan.prioritas');

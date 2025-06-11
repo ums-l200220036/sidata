@@ -2,26 +2,35 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Indikator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Indikator; // Don't forget to import your Indikator model!
 
 class DashboardController extends Controller
 {
+    /**
+     * Menampilkan halaman dashboard dengan daftar indikator
+     * yang sudah difilter berdasarkan hak akses pengguna.
+     */
     public function index()
     {
-        $role = Auth::user()->role;
-        $indikators = collect(); // Initialize as an empty collection
+        // 1. Ambil data pengguna yang sedang login
+        $user = Auth::user();
+        
+        // 2. Siapkan query dasar untuk mengambil indikator
+        $query = Indikator::query();
 
-        // Fetch ALL indicators if the user is authenticated.
-        // No role-specific filtering for which indicators are shown on the dashboard itself.
-        if (Auth::check()) {
-            $indikators = Indikator::all();
-            // If you only need specific columns, you can select them:
-            // $indikators = Indikator::select('id', 'nama_indikator')->get();
+        // 3. Terapkan logika hak akses dengan menambahkan kondisi 'where' jika perlu
+        if ($user->role === 'opd') {
+            // Jika pengguna adalah OPD, filter berdasarkan opd_id mereka
+            $query->where('opd_id', $user->opd_id);
         }
+        // Jika bukan OPD, tidak ada filter tambahan yang diterapkan,
+        // sehingga semua indikator akan diambil.
 
-        // Pass all relevant data to the view
-        return view('dashboard', compact('role', 'indikators'));
+        // 4. Eksekusi query dan kirim hasilnya ke view
+        $indikators = $query->get();
+        
+        return view('dashboard', compact('indikators'));
     }
 }
