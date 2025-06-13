@@ -71,7 +71,9 @@ Route::get('/laporan/prioritas/{indikatorId}/{tahun?}/{kecamatanId?}/{kelurahanI
     ->middleware('auth')
     ->name('laporan.prioritas');
 
-Route::get('/tabel-publik', function () {
+Route::get('/tabel-publik/{indikatorId?}', [DashboardController::class, 'showPublicReport'])->name('laporan.publik');
+
+    Route::get('/tabel-publik', function () {
     return view('tabel-publik');
 })->name('tabel.publik');
 
@@ -79,3 +81,5 @@ Route::get('/daftar-opd', function () {
     return view('daftar-opd');
 })->name('daftar.opd');
 
+Route::get('/laporan/pegawai-usia/{indikatorId}', [DashboardController::class, 'showPegawaiUsiaReport'])
+    ->name('laporan.pegawai_usia');

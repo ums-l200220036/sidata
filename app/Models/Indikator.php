@@ -2,72 +2,60 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Str; // <-- Tambahkan ini untuk helper string
+use Illuminate\Support\Str;
 
 class Indikator extends Model
 {
+    use HasFactory;
+
     protected $table = 'indikator';
 
-    // PERBAIKAN 1: Tambahkan 'route_name' ke dalam $fillable
     protected $fillable = [
         'opd_id',
         'nama_indikator',
         'dimensi_label',
-        'route_name' 
+        'route_name',
+        'import_class'
     ];
 
     public function opd()
     {
         return $this->belongsTo(Opd::class);
     }
-    
-    // PERBAIKAN 2: Gunakan Model Event untuk otomatisasi
-    protected static function booted(): void
-    {
-        // Event ini berjalan TEPAT SEBELUM sebuah indikator baru dibuat
-        static::creating(function (Indikator $indikator) {
-            $indikator->route_name = self::determineRouteName($indikator->nama_indikator);
-        });
-
-        // Event ini berjalan TEPAT SEBELUM sebuah indikator di-update
-        static::updating(function (Indikator $indikator) {
-            // Hanya update route_name jika nama_indikator berubah
-            if ($indikator->isDirty('nama_indikator')) {
-                $indikator->route_name = self::determineRouteName($indikator->nama_indikator);
-            }
-        });
-    }
 
     /**
-     * Helper function untuk menentukan nama route berdasarkan nama indikator.
-     * Logika ini sekarang terpusat di satu tempat.
-     *
-     * @param string $namaIndikator
-     * @return string
+     * Ini akan berjalan secara otomatis SETIAP KALI
+     * Anda membuat atau meng-update sebuah Indikator.
      */
-    private static function determineRouteName(string $namaIndikator): string
+    protected static function booted(): void
     {
-        $namaLower = Str::lower($namaIndikator);
+        $setAttributes = function (Indikator $indikator) {
+            $namaLower = Str::lower($indikator->nama_indikator);
 
-        if (Str::contains($namaLower, 'pekerjaan')) {
-            return 'data.pekerjaan.gender';
-        }
+            // --- Logika Otomatis untuk Route Name ---
+            if (Str::contains($namaLower, ['miskin', 'rentan'])) {
+                $indikator->route_name = 'laporan.prioritas';
+            } elseif (Str::contains($namaLower, 'pekerjaan')) {
+                $indikator->route_name = 'data.pekerjaan.gender';
+            } elseif (Str::contains($namaLower, 'agama')) {
+                $indikator->route_name = 'data.agama.gender';
+            } else {
+                $indikator->route_name = 'laporan.publik'; // Ganti dengan default yang sesuai
+            }
 
-        if (Str::contains($namaLower, 'agama')) {
-            return 'data.agama.gender';
-        }
-        
-        // Urutkan dari yang paling spesifik ke yang paling umum
-        if (Str::contains($namaLower, 'penduduk miskin')) {
-            return 'laporan.prioritas';
-        }
-        
-        if (Str::contains($namaLower, 'penduduk rentan')) {
-            return 'laporan.prioritas';
-        }
+            // --- Logika Otomatis untuk Import Class ---
+            if (Str::contains($namaLower, ['pegawai', 'usia'])) {
+                $indikator->import_class = 'PegawaiUsiaImport';
+            } elseif (Str::contains($namaLower, ['miskin', 'rentan'])) {
+                $indikator->import_class = 'PrioritasImport'; 
+            } else {
+                $indikator->import_class = 'DataSektoralImport';
+            }
+        };
 
-        // Defaultnya adalah laporan jenis kelamin umum
-        return 'data.gender'; 
+        static::creating($setAttributes);
+        static::updating($setAttributes);
     }
 }

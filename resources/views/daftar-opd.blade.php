@@ -4,7 +4,7 @@
 
 {{-- Assume you have a x-navbar component or remove it if not needed --}}
 <x-navbar>
-    <main class="container px-10 py-8">
+    <main class="px-10 py-8">
 
         {{-- Hero/Introduction Section --}}
         <div class="bg-white p-8 mb-12 gap-10 flex flex-col md:flex-row items-end">

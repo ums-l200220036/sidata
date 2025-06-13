@@ -8,14 +8,6 @@
         <h2 class="text-3xl font-bold text-gray-800">{{ $indikatorTitle }}</h2>
         <div class="flex">
             <form id="filter-form" class="flex flex-wrap items-center justify-center gap-6 py-2">
-                <div class="flex items-center gap-2 p-4 bg-white transition duration-200 ease-in-out">
-                    <label for="year-select" class="font-semibold text-gray-700 text-sm">Tahun:</label>
-                    <select name="year" id="year-select" class="block w-full min-w-[120px] border border-gray-300 rounded-lg py-2 px-3 text-sm text-gray-800 leading-tight focus:outline-none focus:ring-2 focus:ring-[#FE482B] focus:border-transparent transition duration-200 ease-in-out cursor-pointer appearance-none bg-white pr-8">
-                        @foreach($availableYears as $year)
-                            <option value="{{ $year }}" {{ $year == $tahunAnalisis ? 'selected' : '' }}>{{ $year }}</option>
-                        @endforeach
-                    </select>
-                </div>
                 @if(Auth::check() && Auth::user()->role === 'opd')
                 <div class="flex items-center gap-2 p-4 bg-white transition duration-200 ease-in-out">
                     <label for="kecamatan-select" class="font-semibold text-gray-700 text-sm">Kecamatan:</label>
@@ -64,49 +56,47 @@
                         @forelse ($structuredData as $kecamatanName => $kecamatanInfo)
                             @php $currentKelurahan = null; @endphp
                             @foreach ($kecamatanInfo['kelurahan'] as $kelurahanName => $kelurahanInfo)
-                                
-                                {{-- Loop untuk data prioritas (tidak ada perubahan) --}}
+
+                                {{-- Loop untuk data prioritas --}}
                                 @foreach ($kelurahanInfo['prioritas'] as $prioritasName => $values)
                                     <tr class="hover:bg-gray-50 {{ $loop->parent->parent->iteration % 2 === 0 ? 'bg-white' : 'bg-gray-50' }}">
-                                        
+
                                         @if ($currentKecamatan !== $kecamatanName)
                                             <td rowspan="{{ $kecamatanInfo['rowspan'] }}" class="border border-gray-200 px-4 py-2 font-bold align-middle text-center">{{ $kecamatanName }}</td>
                                             @php $currentKecamatan = $kecamatanName; @endphp
                                         @endif
-                                        
+
                                         @if ($currentKelurahan !== $kelurahanName)
                                             <td rowspan="{{ $kelurahanInfo['rowspan'] }}" class="border border-gray-200 px-4 py-2 font-medium align-middle text-center">{{ $kelurahanName }}</td>
                                             @php $currentKelurahan = $kelurahanName; @endphp
                                         @endif
-                                        
+
                                         <td class="border border-gray-200 px-4 py-2 text-left">{{ $prioritasName }}</td>
-                                        
-                                        <td class="border border-gray-200 px-4 py-2">{{ number_format($values["{$tahunSebelumnya}_s1"]['individu']) }}</td>
-                                        <td class="border border-gray-200 px-4 py-2">{{ number_format($values["{$tahunSebelumnya}_s1"]['keluarga']) }}</td>
-                                        <td class="border border-gray-200 px-4 py-2">{{ number_format($values["{$tahunSebelumnya}_s2"]['individu']) }}</td>
-                                        <td class="border border-gray-200 px-4 py-2">{{ number_format($values["{$tahunSebelumnya}_s2"]['keluarga']) }}</td>
-                                        <td class="border border-gray-200 px-4 py-2">{{ number_format($values["{$tahunAnalisis}_s1"]['individu']) }}</td>
-                                        <td class="border border-gray-200 px-4 py-2">{{ number_format($values["{$tahunAnalisis}_s1"]['keluarga']) }}</td>
+
+                                        {{-- Perubahan: Gunakan '', '' untuk menghilangkan pemisah ribuan --}}
+                                        <td class="border border-gray-200 px-4 py-2">{{ number_format($values["{$tahunSebelumnya}_s1"]['individu'], 0, '', '') }}</td>
+                                        <td class="border border-gray-200 px-4 py-2">{{ number_format($values["{$tahunSebelumnya}_s1"]['keluarga'], 0, '', '') }}</td>
+                                        <td class="border border-gray-200 px-4 py-2">{{ number_format($values["{$tahunSebelumnya}_s2"]['individu'], 0, '', '') }}</td>
+                                        <td class="border border-gray-200 px-4 py-2">{{ number_format($values["{$tahunSebelumnya}_s2"]['keluarga'], 0, '', '') }}</td>
+                                        <td class="border border-gray-200 px-4 py-2">{{ number_format($values["{$tahunAnalisis}_s1"]['individu'], 0, '', '') }}</td>
+                                        <td class="border border-gray-200 px-4 py-2">{{ number_format($values["{$tahunAnalisis}_s1"]['keluarga'], 0, '', '') }}</td>
                                     </tr>
                                 @endforeach
-                                
-                                {{-- ================================================================ --}}
-                                {{-- PERBAIKAN UTAMA DI SINI: STRUKTUR BARIS TOTAL --}}
-                                {{-- ================================================================ --}}
+
+                                {{-- Baris Total --}}
                                 <tr class="bg-gray-200 hover:bg-gray-300 font-bold">
-                                    {{-- Kita TIDAK menggunakan colspan. Kita hanya perlu satu sel untuk label "Total" --}}
-                                    {{-- karena sel Kecamatan & Kelurahan dari atas sudah mencakup baris ini berkat rowspan. --}}
                                     <td class="border-t-2 border-b-2 border-gray-300 px-4 py-2 text-left">Total</td>
-                                    
+
                                     @php $totalValues = $kelurahanInfo['total']; @endphp
-                                    <td class="border-t-2 border-b-2 border-gray-300 px-4 py-2">{{ number_format($totalValues["{$tahunSebelumnya}_s1"]['individu']) }}</td>
-                                    <td class="border-t-2 border-b-2 border-gray-300 px-4 py-2">{{ number_format($totalValues["{$tahunSebelumnya}_s1"]['keluarga']) }}</td>
-                                    <td class="border-t-2 border-b-2 border-gray-300 px-4 py-2">{{ number_format($totalValues["{$tahunSebelumnya}_s2"]['individu']) }}</td>
-                                    <td class="border-t-2 border-b-2 border-gray-300 px-4 py-2">{{ number_format($totalValues["{$tahunSebelumnya}_s2"]['keluarga']) }}</td>
-                                    <td class="border-t-2 border-b-2 border-gray-300 px-4 py-2">{{ number_format($totalValues["{$tahunAnalisis}_s1"]['individu']) }}</td>
-                                    <td class="border-t-2 border-b-2 border-gray-300 px-4 py-2">{{ number_format($totalValues["{$tahunAnalisis}_s1"]['keluarga']) }}</td>
+                                    {{-- Perubahan: Gunakan '', '' untuk menghilangkan pemisah ribuan --}}
+                                    <td class="border-t-2 border-b-2 border-gray-300 px-4 py-2">{{ number_format($totalValues["{$tahunSebelumnya}_s1"]['individu'], 0, '', '') }}</td>
+                                    <td class="border-t-2 border-b-2 border-gray-300 px-4 py-2">{{ number_format($totalValues["{$tahunSebelumnya}_s1"]['keluarga'], 0, '', '') }}</td>
+                                    <td class="border-t-2 border-b-2 border-gray-300 px-4 py-2">{{ number_format($totalValues["{$tahunSebelumnya}_s2"]['individu'], 0, '', '') }}</td>
+                                    <td class="border-t-2 border-b-2 border-gray-300 px-4 py-2">{{ number_format($totalValues["{$tahunSebelumnya}_s2"]['keluarga'], 0, '', '') }}</td>
+                                    <td class="border-t-2 border-b-2 border-gray-300 px-4 py-2">{{ number_format($totalValues["{$tahunAnalisis}_s1"]['individu'], 0, '', '') }}</td>
+                                    <td class="border-t-2 border-b-2 border-gray-300 px-4 py-2">{{ number_format($totalValues["{$tahunAnalisis}_s1"]['keluarga'], 0, '', '') }}</td>
                                 </tr>
-                                
+
                             @endforeach
                         @empty
                             <tr>
@@ -121,22 +111,25 @@
 
 <script>
     document.getElementById('filter-form').addEventListener('change', function(e) {
-        const tahun = document.getElementById('year-select').value;
+        // Asumsi 'year-select' ada, namun tidak terlihat dalam markup yang Anda berikan.
+        // Jika tidak ada, baris ini mungkin menyebabkan error JavaScript.
+        const tahun = document.getElementById('year-select') ? document.getElementById('year-select').value : new Date().getFullYear(); // Fallback to current year if not found
+
         const kecamatanSelect = document.getElementById('kecamatan-select');
         const kelurahanSelect = document.getElementById('kelurahan-select');
         const kecamatanId = kecamatanSelect ? kecamatanSelect.value : '0';
         const kelurahanId = kelurahanSelect ? kelurahanSelect.value : '0';
-        
+
         // Gunakan nama route yang benar untuk laporan ini
         const baseUrl = "{{ route('laporan.prioritas', ['indikatorId' => $indikator->id]) }}";
-        
+
         let url = `${baseUrl}/${tahun}`;
         if (kelurahanId !== '0') {
             url += `/0/${kelurahanId}`;
         } else if (kecamatanId !== '0') {
             url += `/${kecamatanId}`;
         }
-        
+
         window.location.href = url;
     });
 </script>

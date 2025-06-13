@@ -131,6 +131,12 @@
         <div class="flex flex-col md:flex-row items-center md:justify-between text-center w-full">
             <img class="w-32" src="{{ asset('images/SidataLogoWhite.png') }}" alt="">
             <p class="text-sm mt-2 md:mt-0 w-full md:w-auto">© 2025 SiData. All rights reserved.</p>
+            <div class="gap-10">
+                <a href=""><i class="fa-brands fa-facebook-f"></i></a>
+                <a href=""><i class="fa-brands fa-youtube"></i></a>
+                <a href=""><i class="fa-brands fa-x"></i></a>
+                <a href=""><i class="fa-brands fa-x-twitter"></i></a>
+            </div>
         </div>
     </footer>
 </body>

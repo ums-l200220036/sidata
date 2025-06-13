@@ -27,13 +27,11 @@
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-8 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             
-            {{-- KOTAK TOTAL DATASET DENGAN ALPINE.JS --}}
             <div class="bg-white shadow-lg border-b-4 border-[#FE482B] hover:shadow-xl transition-all duration-300 p-8 text-left flex flex-col justify-between">
                 <div>
                     <div class="flex items-center mb-4">
                         <i class="fas fa-database text-[#FE482B] text-4xl mr-4"></i>
                         
-                        {{-- PERUBAHAN DI SINI --}}
                         <p class="text-5xl font-extrabold text-gray-900"
                         x-data="{ current: 0, target: {{ $totalDataset }} }"
                         x-init="
@@ -54,16 +52,14 @@
                         Kumpulan data mentah yang terstruktur dalam bentuk tabel, siap untuk diolah dan dianalisis lebih lanjut oleh publik.
                     </p>
                 </div>
-                <a href="#" class="inline-block mt-6 px-6 py-3 bg-[#FE482B] text-white text-base font-semibold rounded-md shadow-md hover:bg-[#e5401f] transition-colors duration-300 self-start">Lihat Dataset</a>
+                <a href="{{ route('laporan.publik') }}" class="inline-block mt-6 px-6 py-3 bg-[#FE482B] text-white text-base font-semibold rounded-md shadow-md hover:bg-[#e5401f] transition-colors duration-300 self-start">Lihat Dataset</a>
             </div>
 
-            {{-- KOTAK TOTAL KATEGORI DENGAN ALPINE.JS --}}
             <div class="bg-white shadow-lg border-b-4 border-[#FE482B] hover:shadow-xl transition-all duration-300 p-8 text-left flex flex-col justify-between">
                 <div>
                     <div class="flex items-center mb-4">
                         <i class="fas fa-layer-group text-[#FE482B] text-4xl mr-4"></i>
-                        
-                        {{-- PERUBAHAN DI SINI --}}
+                    
                         <p class="text-5xl font-extrabold text-gray-900"
                         x-data="{ current: 0, target: {{ $totalKategori }} }"
                         x-init="

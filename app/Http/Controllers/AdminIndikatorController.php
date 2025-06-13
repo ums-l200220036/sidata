@@ -18,24 +18,15 @@ class AdminIndikatorController extends Controller // Nama controller: AdminIndik
 
     public function store(IndikatorRequest $request)
     {
-        Indikator::create([ // Menggunakan model Indikator
-            'nama_indikator' => $request->nama_indikator, // Nama kolom: nama_indikator
-            'dimensi_label' => $request->dimensi_label, // <-- DITAMBAHKAN
-            'opd_id' => $request->opd_id,
-        ]);
-
-        return redirect()->route('indikator.index')->with('success', 'Indikator berhasil ditambahkan.'); // Nama rute: indikator.index
+        // Tidak perlu set route_name atau import_class. Model melakukannya otomatis.
+        Indikator::create($request->validated());
+        return redirect()->route('indikator.index')->with('success', 'Indikator berhasil ditambahkan.');
     }
 
-    public function update(IndikatorRequest $request, Indikator $indikator) // Parameter model: Indikator $indikator
+    public function update(IndikatorRequest $request, Indikator $indikator)
     {
-        $indikator->update([ // Menggunakan model Indikator
-            'nama_indikator' => $request->nama_indikator, // Nama kolom: nama_indikator
-            'dimensi_label' => $request->dimensi_label, // <-- DITAMBAHKAN
-            'opd_id' => $request->opd_id,
-        ]);
-
-        return redirect()->route('indikator.index')->with('success', 'Indikator berhasil diperbarui.'); // Nama rute: indikator.index
+        $indikator->update($request->validated());
+        return redirect()->route('indikator.index')->with('success', 'Indikator berhasil diperbarui.');
     }
 
     public function destroy(Indikator $indikator) // Parameter model: Indikator $indikator

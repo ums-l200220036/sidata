@@ -13,4 +13,9 @@ class Periode extends Model
         'tahun',
         'semester',
     ];
+
+    public function dataSektoral()
+    {
+        return $this->hasMany(DataSektoral::class, 'periode_id', 'id');
+    }
 }

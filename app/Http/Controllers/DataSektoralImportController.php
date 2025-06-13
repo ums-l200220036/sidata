@@ -30,11 +30,22 @@ class DataSektoralImportController extends Controller
         ]);
 
         $user = Auth::user();
+        $indikator = Indikator::find($request->indikator_id);
 
-        Excel::import(
-            new DataSektoralImport($request->indikator_id, $user->opd_id),
-            $request->file('file')
-        );
+        // 1. Dapatkan nama Class Parser dari database
+        $importClassName = $indikator->import_class;
+
+        // 2. Periksa apakah nama Class valid dan filenya ada
+        if (empty($importClassName) || !class_exists("App\\Imports\\{$importClassName}")) {
+            return redirect()->back()->withErrors(['file' => 'Tipe parser import untuk indikator ini belum dikonfigurasi.']);
+        }
+        
+        // 3. Buat objek Import secara dinamis
+        $importerClass = "App\\Imports\\{$importClassName}";
+        $importerObject = new $importerClass($request->indikator_id, $user->opd_id);
+
+        // 4. Jalankan import dengan parser yang benar
+        Excel::import($importerObject, $request->file('file'));
 
         return redirect()->route('dashboard')->with('success', 'Data berhasil diunggah.');
     }
