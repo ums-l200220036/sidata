@@ -73,7 +73,7 @@ Route::get('/laporan/prioritas/{indikatorId}/{tahun?}/{kecamatanId?}/{kelurahanI
 
 Route::get('/tabel-publik/{indikatorId?}', [DashboardController::class, 'showPublicReport'])->name('laporan.publik');
 
-    Route::get('/tabel-publik', function () {
+Route::get('/tabel-publik', function () {
     return view('tabel-publik');
 })->name('tabel.publik');
 

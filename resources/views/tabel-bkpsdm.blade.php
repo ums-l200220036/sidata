@@ -7,7 +7,7 @@
     <div class="container mx-auto px-4 py-6">
         <h2 class="text-3xl font-bold text-gray-800 mb-6">{{ $indikator->nama_indikator }}</h2>
 
-        {{-- Filter Section (Tahun dihapus) --}}
+        {{-- Filter --}}
         <div class="flex justify-start mb-6">
             <form id="filter-form" method="GET" action="{{ route('laporan.pegawai_usia', ['indikatorId' => $indikator->id]) }}" class="flex flex-wrap items-center gap-6">
                 {{-- Filter Kecamatan --}}

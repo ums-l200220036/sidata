@@ -8,8 +8,8 @@
     <h2 class="text-3xl font-bold text-gray-800 mb-4">Jelajahi Data Sektoral</h2>
 
     {{-- FORM FILTER DINAMIS --}}
-    <div class="flex mb-6">
-        <form id="filter-form" method="GET" class="flex flex-wrap items-center justify-center gap-6 p-2 ">
+    <div class="flex">
+        <form id="filter-form" method="GET" action="{{ route('laporan.publik', ['indikatorId' => $selectedIndicatorId]) }}" class="flex items-center justify-center gap-6 p-2">
             {{-- Filter Kategori Indikator --}}
             <div class="flex items-center">
                 <label for="category-select" class="font-semibold text-gray-700 text-sm w-[150px]">Kategori Data:</label>
@@ -21,27 +21,24 @@
                     @endforeach
                 </select>
             </div>
-            {{-- Filter Kecamatan --}}
-            <div class="flex items-center gap-2">
-                <label for="kecamatan-select" class="font-semibold text-gray-700 text-sm">Kecamatan:</label>
-                <select name="kecamatan" id="kecamatan-select" class="block w-full min-w-[200px] border border-gray-300 rounded-lg py-2 px-3 ...">
-                    <option value="0">Semua Kecamatan</option>
-                    @foreach($kecamatans as $kecamatan)
-                        <option value="{{ $kecamatan->id }}" {{ $kecamatan->id == $selectedKecamatanId ? 'selected' : '' }}>{{ $kecamatan->kecamatan }}</option>
-                    @endforeach
-                </select>
-            </div>
-            {{-- Filter Kelurahan --}}
-            <div class="flex items-center gap-2">
-                <label for="kelurahan-select" class="font-semibold text-gray-700 text-sm">Kelurahan:</label>
-                <select name="kelurahan" id="kelurahan-select" class="block w-full min-w-[200px] border border-gray-300 rounded-lg py-2 px-3 ...">
-                    <option value="0">Semua Kelurahan</option>
-                    @foreach($kelurahans as $kelurahan)
-                        <option value="{{ $kelurahan->id }}" {{ $kelurahan->id == $selectedKelurahanId ? 'selected' : '' }}>{{ $kelurahan->kelurahan }}</option>
-                    @endforeach
-                </select>
-            </div>
-            <button type="submit" class="bg-[#FE482B] text-white font-bold py-2 px-6 rounded-lg hover:bg-[#e5401f]">Terapkan</button>
+            <div class="flex items-center gap-2 p-4 bg-white transition duration-200 ease-in-out">
+                    <label for="kecamatan-select" class="font-semibold text-gray-700 text-sm">Kecamatan:</label>
+                    <select name="kecamatan" id="kecamatan-select" class="block w-full min-w-[180px] border border-gray-300 rounded-lg py-2 px-3 text-sm text-gray-800 leading-tight focus:outline-none focus:ring-2 focus:ring-[#FE482B] focus:border-transparent transition duration-200 ease-in-out cursor-pointer appearance-none bg-white pr-8">
+                        <option value="0">Semua Kecamatan</option>
+                        @foreach($kecamatans as $kecamatan)
+                            <option value="{{ $kecamatan->id }}" {{ $kecamatan->id == $selectedKecamatanId ? 'selected' : '' }}>{{ $kecamatan->kecamatan }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="flex items-center gap-2 p-4 bg-white transition duration-200 ease-in-out">
+                    <label for="kelurahan-select" class="font-semibold text-gray-700 text-sm">Kelurahan:</label>
+                    <select name="kelurahan" id="kelurahan-select" class="block w-full min-w-[180px] border border-gray-300 rounded-lg py-2 px-3 text-sm text-gray-800 leading-tight focus:outline-none focus:ring-2 focus:ring-[#FE482B] focus:border-transparent transition duration-200 ease-in-out cursor-pointer appearance-none bg-white pr-8">
+                        <option value="0">Semua Kelurahan</option>
+                        @foreach($kelurahans as $kelurahan)
+                            <option value="{{ $kelurahan->id }}" {{ $kelurahan->id == $selectedKelurahanId ? 'selected' : '' }}>{{ $kelurahan->kelurahan }}</option>
+                        @endforeach
+                    </select>
+                </div>
         </form>
     </div>
 
@@ -108,17 +105,45 @@
 
 {{-- Script untuk mengubah URL saat Kategori Indikator diganti --}}
 <script>
-    document.getElementById('category-select').addEventListener('change', function() {
-        const selectedIndicatorId = this.value;
-        // Ganti URL ke indikator yang dipilih, tapi reset filter lain
-        window.location.href = `/tabel-publik/${selectedIndicatorId}`;
-    });
+    // Pastikan script ini berjalan setelah seluruh halaman dimuat
+    document.addEventListener('DOMContentLoaded', function () {
+        
+        // Ambil semua elemen filter yang kita butuhkan
+        const filterForm = document.getElementById('filter-form');
+        const categorySelect = document.getElementById('category-select');
+        const kecamatanSelect = document.getElementById('kecamatan-select');
+        const kelurahanSelect = document.getElementById('kelurahan-select');
 
-    // Untuk filter kecamatan, kita akan submit form secara normal
-    document.getElementById('kecamatan-select').addEventListener('change', function() {
-        // Saat kecamatan diganti, kelurahan di-reset
-        document.getElementById('kelurahan-select').value = '0';
-        document.getElementById('filter-form').submit();
+        // --- Logika untuk Filter Kategori (Indikator) ---
+        if (categorySelect) {
+            categorySelect.addEventListener('change', function() {
+                const selectedIndicatorId = this.value;
+                // Saat kategori diganti, kita langsung pindah ke URL baru untuk indikator tersebut.
+                // Ini akan me-reset filter kecamatan dan kelurahan secara otomatis.
+                // Pastikan route 'laporan.publik' sudah ada di web.php
+                window.location.href = `{{ route('laporan.publik', '') }}/${selectedIndicatorId}`;
+            });
+        }
+
+        // --- Logika untuk Filter Kecamatan ---
+        if (kecamatanSelect) {
+            kecamatanSelect.addEventListener('change', function() {
+                // Saat kecamatan diganti, otomatis reset pilihan kelurahan menjadi "Semua Kelurahan"
+                if (kelurahanSelect) {
+                    kelurahanSelect.value = '0';
+                }
+                // Lalu submit form untuk memuat ulang halaman dengan filter baru
+                filterForm.submit();
+            });
+        }
+
+        // --- Logika untuk Filter Kelurahan ---
+        if (kelurahanSelect) {
+            kelurahanSelect.addEventListener('change', function() {
+                // Saat kelurahan diganti, langsung submit form
+                filterForm.submit();
+            });
+        }
     });
 </script>
 </x-navbar>
