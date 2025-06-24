@@ -8,7 +8,7 @@
         <h2 class="text-3xl font-bold text-gray-800 flex items-center gap-3">{{ $indikatorTitle }}</h2>
 
         {{-- Form Filter --}}
-        <div class="flex">
+        <div class="flex flex-wrap justify-between items-center gap-4 mb-6">
             <form id="filter-form" class="flex flex-wrap items-center justify-center gap-6 py-2">
                 {{-- Filter Tahun --}}
                 <div class="flex items-center gap-2 p-4 bg-white transition duration-200 ease-in-out">
@@ -50,6 +50,29 @@
                 </div>
                 @endif
             </form>
+
+            @php
+                $exportRouteName = '';
+                if (request()->routeIs('data.gender')) {
+                    $exportRouteName = 'laporan.export.pendidikan.gender';
+                } elseif (request()->routeIs('data.pekerjaan.gender')) {
+                    $exportRouteName = 'laporan.export.pekerjaan.gender';
+                } elseif (request()->routeIs('data.agama.gender')) {
+                    $exportRouteName = 'laporan.export.agama.gender';
+                }
+            @endphp
+
+            @if($exportRouteName)
+            <a href="{{ route($exportRouteName, [
+                    'indikatorId' => $indikator->id,
+                    'tahun' => $tahunAnalisis,
+                    'kecamatanId' => $selectedKecamatanId ?? 0,  
+                    'kelurahanId' => $selectedKelurahanId ?? 0   
+                ]) }}"
+            class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg inline-flex items-center transition duration-200 whitespace-nowrap">
+                <i class="fas fa-download mr-2"></i> Unduh Excel
+            </a>
+            @endif
         </div>
 
         {{-- Tabel Data --}}

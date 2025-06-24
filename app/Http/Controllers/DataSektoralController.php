@@ -7,6 +7,9 @@ use App\Models\Indikator;
 use App\Models\Periode;
 use App\Models\Wilayah;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\DataSektoralExport;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
@@ -208,7 +211,6 @@ class DataSektoralController extends Controller
 
     /**
      * Helper method GENERIK untuk memproses data berbasis prioritas.
-     * VERSI FINAL YANG SUDAH DIPERBAIKI.
      */
     private function processPrioritasData($rawData, $tahunN, $tahunN1)
     {
@@ -280,5 +282,271 @@ class DataSektoralController extends Controller
         }
         
         return $finalData;
+    }
+
+    public function showPegawaiUsiaReport(Request $request, $indikatorId)
+    {
+        $indikator = Indikator::findOrFail($indikatorId);
+        $user = Auth::user();
+
+        // Ambil filter dari request
+        $selectedKecamatan = $request->input('kecamatan');
+        $selectedKelurahan = $request->input('kelurahan');
+
+        // Ambil data untuk dropdown filter
+        $allKecamatans = Wilayah::whereNull('parent_id')->orderBy('kecamatan')->get();
+        $kelurahans = collect();
+
+        // Bangun query dasar
+        $query = DataSektoral::where('indikator_id', $indikatorId)
+                            ->with(['wilayah.parent', 'dimensi', 'periode']);
+
+        // =======================================================================
+        // TAHAP 1: KUNCI DATA BERDASARKAN HAK AKSES
+        // =======================================================================
+        if ($user->role === 'kecamatan') {
+            $kecamatanWilayah = Wilayah::find($user->wilayah_id);
+            if ($kecamatanWilayah) {
+                $selectedKecamatan = $kecamatanWilayah->kecamatan; // Kunci nama kecamatan
+                $query->whereHas('wilayah', fn($q) => $q->where('kecamatan', $selectedKecamatan));
+                $kelurahans = Wilayah::where('parent_id', $user->wilayah_id)->orderBy('kelurahan')->get();
+            }
+        } elseif ($user->role === 'kelurahan') {
+            $query->where('wilayah_id', $user->wilayah_id);
+            $kelurahanWilayah = Wilayah::with('parent')->find($user->wilayah_id);
+            if ($kelurahanWilayah) {
+                $selectedKelurahan = $kelurahanWilayah->kelurahan;
+                $selectedKecamatan = $kelurahanWilayah->parent->kecamatan ?? null;
+            }
+        }
+        // =======================================================================
+        
+        // =======================================================================
+        // TAHAP 2: TERAPKAN FILTER DARI DROPDOWN (LOGIKA DIPERBAIKI)
+        // =======================================================================
+        // Jika kelurahan dipilih (bisa oleh OPD atau Kecamatan), ini adalah filter paling spesifik
+        if ($selectedKelurahan) {
+            $query->whereHas('wilayah', fn($q) => $q->where('kelurahan', $selectedKelurahan));
+        } 
+        // Jika tidak ada kelurahan dipilih, dan kecamatan dipilih (hanya bisa oleh OPD, karena kecamatan sudah dikunci untuk role kecamatan)
+        elseif ($selectedKecamatan && $user->role === 'opd') {
+            $query->whereHas('wilayah', fn($q) => $q->where('kecamatan', $selectedKecamatan));
+        }
+        // =======================================================================
+
+        // Logika untuk mengisi dropdown kelurahan jika OPD memilih kecamatan
+        if ($user->role === 'opd' && $selectedKecamatan && $kelurahans->isEmpty()) {
+            $kecId = $allKecamatans->firstWhere('kecamatan', $selectedKecamatan)->id ?? null;
+            if ($kecId) {
+                $kelurahans = Wilayah::where('parent_id', $kecId)->orderBy('kelurahan')->get();
+            }
+        }
+
+        $rawData = $query->get();
+
+        if ($rawData->isEmpty()) {
+            return view('tabel-kosong', [
+                'indikator' => $indikator, 
+                'indikatorTitle' => $indikator->nama_indikator, 
+                'message' => 'Data untuk filter yang dipilih tidak ditemukan.'
+            ]);
+        }
+
+        $uniqueYearsInView = $rawData->pluck('periode.tahun')->unique()->filter()->sort()->values();
+        $processed = $this->processPegawaiUsiaData($rawData, $uniqueYearsInView);
+
+        return view('tabel-bkpsdm', [
+            'indikator' => $indikator,
+            'indikatorTitle' => $indikator->nama_indikator,
+            'structuredData' => $processed['data'],
+            'grandTotalsPerYear' => $processed['totals'],
+            'uniqueYearsInView' => $uniqueYearsInView,
+            'kecamatans' => $allKecamatans,
+            'kelurahans' => $kelurahans,
+            'selectedKecamatan' => $selectedKecamatan,
+            'selectedKelurahan' => $selectedKelurahan,
+        ]);
+    }
+
+    /**
+     * Helper method final untuk memproses data Pegawai per Usia.
+     */
+    private function processPegawaiUsiaData($rawData, $targetYears)
+    {
+        $pivotedData = [];
+        $grandTotals = [];
+
+        // Inisialisasi grand total
+        foreach ($targetYears as $year) {
+            $grandTotals[$year] = ['ASN' => 0, 'Non ASN' => 0, 'Total' => 0];
+        }
+
+        // Tahap 1: Pivot data mentah
+        foreach ($rawData as $item) {
+            if (!$item->wilayah || !$item->dimensi || !$item->periode || !$targetYears->contains($item->periode->tahun)) continue;
+            
+            $kec = $item->wilayah->parent->kecamatan ?? $item->wilayah->kecamatan ?? 'Lainnya';
+            $kel = $item->wilayah->kelurahan;
+            
+            $parts = explode(' - ', $item->dimensi->nama_dimensi);
+            $usia = trim($parts[0] ?? 'N/A');
+            $jk = trim($parts[1] ?? 'N/A');
+            
+            $tahun = $item->periode->tahun;
+            $status = $item->satuan;
+            $nilai = (int) $item->nilai;
+
+            if (!isset($pivotedData[$kec][$kel][$usia][$jk][$tahun])) {
+                $pivotedData[$kec][$kel][$usia][$jk][$tahun] = ['ASN' => 0, 'Non ASN' => 0];
+            }
+            $pivotedData[$kec][$kel][$usia][$jk][$tahun][$status] += $nilai;
+        }
+
+        // ==========================================================
+        // TAHAP 2: PERBAIKAN LOGIKA ROWSPAN DAN STRUKTUR DATA
+        // ==========================================================
+        $structuredData = [];
+        foreach ($pivotedData as $kecamatanName => $kelurahanList) {
+            $kecamatanRowspan = 0;
+            
+            foreach ($kelurahanList as $kelurahanName => $usiaList) {
+                $kelurahanRowspan = 0;
+                
+                foreach ($usiaList as $usiaName => $jenisKelaminList) {
+                    // Setiap kategori usia (misal: 21-30 Tahun) akan berisi beberapa baris (Laki-laki/Perempuan)
+                    $kelurahanRowspan += count($jenisKelaminList);
+                }
+                $kecamatanRowspan += $kelurahanRowspan;
+            }
+
+            // Setelah semua rowspan dihitung, kita bangun strukturnya
+            $kelurahanDataForView = [];
+            foreach ($kelurahanList as $kelurahanName => $usiaList) {
+                $kelurahanRowspanCurrent = 0; // Hitung lagi untuk kelurahan spesifik ini
+                $usiaDataForView = [];
+                
+                foreach($usiaList as $usiaName => $jenisKelaminList) {
+                    $usiaRowspan = count($jenisKelaminList);
+                    $kelurahanRowspanCurrent += $usiaRowspan;
+                    
+                    $jkRows = [];
+                    foreach($jenisKelaminList as $jkName => $yearlyData) {
+                        $row = ['jenis_kelamin' => $jkName, 'yearly_data' => []];
+                        foreach ($targetYears as $year) {
+                            $asn = $yearlyData[$year]['ASN'] ?? 0;
+                            $nonAsn = $yearlyData[$year]['Non ASN'] ?? 0;
+                            $total = $asn + $nonAsn;
+                            
+                            $row['yearly_data'][$year] = ['ASN' => $asn, 'Non ASN' => $nonAsn, 'Total' => $total];
+                            
+                            // Cek untuk grand total hanya jika jkRows belum dihitung untuk tahun ini
+                            if(!isset($jkRows[0]['yearly_data'][$year])){
+                                $grandTotals[$year]['ASN'] += $asn;
+                                $grandTotals[$year]['Non ASN'] += $nonAsn;
+                                $grandTotals[$year]['Total'] += $total;
+                            }
+                        }
+                        $jkRows[] = $row;
+                    }
+                    $usiaDataForView[$usiaName] = [
+                        'rowspan_usia' => $usiaRowspan,
+                        'rows' => $jkRows,
+                    ];
+                }
+                $kelurahanDataForView[$kelurahanName] = [
+                    'rowspan_kelurahan' => $kelurahanRowspanCurrent,
+                    'usias' => $usiaDataForView,
+                ];
+            }
+
+            $structuredData[$kecamatanName] = [
+                'rowspan_kecamatan' => $kecamatanRowspan,
+                'kelurahans' => $kelurahanDataForView,
+            ];
+        }
+        
+        return ['data' => $structuredData, 'totals' => $grandTotals];
+    }
+
+    // ===================================================================================
+    // METODE UNTUK EXPORT KE EXCEL
+    // ===================================================================================
+    
+    /**
+     * Menangani permintaan ekspor untuk laporan Pegawai per Usia.
+     */
+    public function exportPegawaiUsiaReport(Request $request, $indikatorId)
+    {
+        // Panggil method yang sudah ada untuk mendapatkan semua data yang telah diproses
+        $viewOrData = $this->showPegawaiUsiaReport($request, $indikatorId);
+
+        // === BAGIAN YANG DIPERBAIKI ===
+        // Periksa apakah yang dikembalikan adalah objek View dan namanya adalah 'tabel-kosong'
+        if ($viewOrData instanceof \Illuminate\View\View && $viewOrData->getName() === 'tabel-kosong') {
+            return back()->with('error', 'Tidak ada data untuk diekspor.');
+        }
+
+        // Jika bukan view 'tabel-kosong', berarti itu adalah view dengan data
+        // Ekstrak data dari objek view untuk dikirim ke file Excel
+        $dataForExport = $viewOrData->getData();
+
+        $indikatorTitle = $dataForExport['indikator']->nama_indikator ?? 'Laporan Pegawai Usia';
+        $fileName = Str::slug($indikatorTitle) . '-' . date('Y-m-d') . '.xlsx';
+        
+        // Panggil class export dengan view khusus untuk bkpsdm
+        // Pastikan Anda sudah membuat file 'resources/views/exports/bkpsdm.blade.php'
+        return Excel::download(new DataSektoralExport('exports.bkpsdm', $dataForExport), $fileName);
+    }
+
+    public function exportPrioritas($indikatorId, $tahun = null, $kecamatanId = null, $kelurahanId = null)
+    {
+        // Panggil metode showPrioritasReport untuk mendapatkan semua datanya
+        $view = $this->showPrioritasReport($indikatorId, $tahun, $kecamatanId, $kelurahanId);
+
+        // Ekstrak data dari view object
+        $dataForExport = $view->getData();
+        
+        $indikatorTitle = $dataForExport['indikatorTitle'] ?? 'Laporan Prioritas';
+        $fileName = Str::slug($indikatorTitle) . '-' . date('Y-m-d') . '.xlsx';
+
+        return Excel::download(new DataSektoralExport('exports.prioritas', $dataForExport), $fileName);
+    }
+    
+    public function exportPendidikanByGender($indikatorId, $tahun = null, $kecamatanId = null, $kelurahanId = null)
+    {
+        return $this->exportGender('pendidikan', $indikatorId, $tahun, $kecamatanId, $kelurahanId);
+    }
+
+    public function exportPekerjaanByGender($indikatorId, $tahun = null, $kecamatanId = null, $kelurahanId = null)
+    {
+        return $this->exportGender('pekerjaan', $indikatorId, $tahun, $kecamatanId, $kelurahanId);
+    }
+    
+    public function exportAgamaByGender($indikatorId, $tahun = null, $kecamatanId = null, $kelurahanId = null)
+    {
+        return $this->exportGender('agama', $indikatorId, $tahun, $kecamatanId, $kelurahanId);
+    }
+
+    /**
+     * Helper method generik untuk ekspor laporan gender.
+     */
+    private function exportGender($dimensionKey, $indikatorId, $tahun, $kecamatanId, $kelurahanId)
+    {
+        // Panggil helper utama untuk mengambil dan memfilter data
+        $viewData = $this->getFilteredDataForView($indikatorId, $tahun, $kecamatanId, $kelurahanId);
+
+        // Jika data kosong, kembalikan pesan
+        if ($viewData instanceof \Illuminate\View\View) {
+            return back()->with('error', 'Tidak ada data untuk diekspor.');
+        }
+
+        // Proses data dan tambahkan kunci dimensi
+        $structuredData = $this->processGenderData($viewData['rawData'], $dimensionKey);
+        $dataForExport = array_merge($viewData, ['structuredData' => $structuredData, 'dimensionKey' => $dimensionKey]);
+        
+        $indikatorTitle = $dataForExport['indikatorTitle'] ?? 'Laporan Gender';
+        $fileName = Str::slug($indikatorTitle) . '-' . date('Y-m-d') . '.xlsx';
+
+        return Excel::download(new DataSektoralExport('exports.gender', $dataForExport), $fileName);
     }
 }

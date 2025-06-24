@@ -8,7 +8,7 @@
     <h2 class="text-3xl font-bold text-gray-800 mb-4">Jelajahi Data Sektoral</h2>
 
     {{-- FORM FILTER DINAMIS --}}
-    <div class="flex">
+    <div class="flex flex-wrap justify-between items-center gap-4 mb-6">
         <form id="filter-form" method="GET" action="{{ route('laporan.publik', ['indikatorId' => $selectedIndicatorId]) }}" class="flex items-center justify-center gap-6 p-2">
             {{-- Filter Kategori Indikator --}}
             <div class="flex items-center">
@@ -40,10 +40,14 @@
                     </select>
                 </div>
         </form>
+        <a href="{{ route('laporan.export.publik', ['indikatorId' => $selectedIndicatorId, 'kecamatan' => $selectedKecamatanId, 'kelurahan' => $selectedKelurahanId]) }}"
+           class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg inline-flex items-center">
+            <i class="fas fa-download mr-2"></i> Unduh Excel
+        </a>
     </div>
 
     {{-- TABEL DATA --}}
-    <div class="overflow-x-auto flex justify-center shadow-lg rounded-lg">
+    <div class="overflow-x-auto flex justify-center shadow-lg">
         <table class="min-w-full border-collapse border border-gray-200 text-sm">
             <thead class="bg-[#FE482B] text-white">
                 <tr>

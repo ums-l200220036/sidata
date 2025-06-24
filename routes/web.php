@@ -72,6 +72,8 @@ Route::get('/laporan/prioritas/{indikatorId}/{tahun?}/{kecamatanId?}/{kelurahanI
     ->name('laporan.prioritas');
 
 Route::get('/tabel-publik/{indikatorId?}', [DashboardController::class, 'showPublicReport'])->name('laporan.publik');
+Route::get('/laporan-export/publik/{indikatorId?}', [DashboardController::class, 'exportPublicReport'])->name('laporan.export.publik');
+
 
 Route::get('/tabel-publik', function () {
     return view('tabel-publik');
@@ -81,5 +83,21 @@ Route::get('/daftar-opd', function () {
     return view('daftar-opd');
 })->name('daftar.opd');
 
-Route::get('/laporan/pegawai-usia/{indikatorId}', [DashboardController::class, 'showPegawaiUsiaReport'])
+Route::get('/laporan/pegawai-usia/{indikatorId}', [DataSektoralController::class, 'showPegawaiUsiaReport'])
     ->name('laporan.pegawai_usia');
+
+Route::prefix('laporan-export')->name('laporan.export.')->group(function () {
+    // URL: /laporan-export/prioritas/{indikatorId}/{tahun?}/{kecamatanId?}/{kelurahanId?}
+    Route::get('prioritas/{indikatorId}/{tahun?}/{kecamatanId?}/{kelurahanId?}', [DataSektoralController::class, 'exportPrioritas'])->name('prioritas');
+    
+    // URL: /laporan-export/pendidikan-gender/{indikatorId}/{tahun?}/{kecamatanId?}/{kelurahanId?}
+    Route::get('pendidikan-gender/{indikatorId}/{tahun?}/{kecamatanId?}/{kelurahanId?}', [DataSektoralController::class, 'exportPendidikanByGender'])->name('pendidikan.gender');
+
+    // URL: /laporan-export/pekerjaan-gender/{indikatorId}/{tahun?}/{kecamatanId?}/{kelurahanId?}
+    Route::get('pekerjaan-gender/{indikatorId}/{tahun?}/{kecamatanId?}/{kelurahanId?}', [DataSektoralController::class, 'exportPekerjaanByGender'])->name('pekerjaan.gender');
+    
+    // URL: /laporan-export/agama-gender/{indikatorId}/{tahun?}/{kecamatanId?}/{kelurahanId?}
+    Route::get('agama-gender/{indikatorId}/{tahun?}/{kecamatanId?}/{kelurahanId?}', [DataSektoralController::class, 'exportAgamaByGender'])->name('agama.gender');
+
+    Route::get('pegawai-usia/{indikatorId}', [DataSektoralController::class, 'exportPegawaiUsiaReport'])->name('pegawai_usia');
+});
