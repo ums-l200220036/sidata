@@ -28,7 +28,6 @@ Route::view('/daftar-opd', 'daftar-opd')->name('daftar.opd');
 
 // Catatan: Rute spesifik '/tabel-publik' ditempatkan sebelum yang berparameter
 // untuk memastikan rute ini dicocokkan dengan benar oleh Laravel.
-Route::view('/tabel-publik', 'tabel-publik')->name('tabel.publik');
 
 Route::controller(DashboardController::class)->group(function () {
     Route::get('/tabel-publik/{indikatorId?}', 'showPublicReport')->name('laporan.publik');
