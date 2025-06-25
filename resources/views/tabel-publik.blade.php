@@ -122,9 +122,6 @@
         if (categorySelect) {
             categorySelect.addEventListener('change', function() {
                 const selectedIndicatorId = this.value;
-                // Saat kategori diganti, kita langsung pindah ke URL baru untuk indikator tersebut.
-                // Ini akan me-reset filter kecamatan dan kelurahan secara otomatis.
-                // Pastikan route 'laporan.publik' sudah ada di web.php
                 window.location.href = `{{ route('laporan.publik', '') }}/${selectedIndicatorId}`;
             });
         }
